@@ -1,0 +1,118 @@
+## PROJECT_GUIDE_1.txt
+coccoro kids（キッズ用品ECサイト）実装ガイド
+DESIGN.txtの仕様に基づき、Next.js（App Router）+ Tailwind CSSでサイトを実装するための作業手順書です。
+DESIGN.txtが「何を作るか（仕様）」、このファイルが「どの順番で・どう作るか（実装計画）」を定義します。
+
+---
+
+## STEP 0：前提確認
+- DESIGN.txtを必ず読み込んだ状態で本ガイドを実行すること
+- 既存の状態：
+  - app/layout.tsx：共通ヘッダー・フッター実装済み
+  - app/page.tsx：TOPページ実装済み（各セクションのリンク先は未実装のため404状態）
+  - public/images/：DESIGN.txt「33. 画像配置リスト」相当のプレースホルダー画像が生成済み（scripts/generate-placeholders.mjs）
+- 本番画像は別担当者が後日用意する予定。ファイル名・パスは変更せず、差し替え前提で実装すること
+- 実装中に迷ったら、必ずDESIGN.txtの該当セクション番号（例：「4. プロダクトカード」）を参照して仕様通りに合わせること。DESIGN.txtに記載のない細部はNext.js/Tailwindの一般的なベストプラクティスに従って補ってよい
+
+---
+
+## STEP 1：現状確認・作業計画提示
+着手前に、以下を確認して一覧化する：
+1. TOPページ内のリンク・ボタンが指す先のURL一覧（現在404になっている遷移先）
+2. DESIGN.txt「ページ構成」に記載の全ページと、実装済み／未実装の対応表
+3. 未実装ページを実装優先度順に並べた作業計画
+
+この時点でファイル一覧・作業計画をユーザーに提示し、認識合わせをしてから次に進むこと。
+
+---
+
+## STEP 2：ルーティング設計
+DESIGN.txtのページ構成をNext.js App Routerのディレクトリ構成にマッピングする。以下を基本方針とする（プロジェクトの実情に応じて調整可）：
+
+```
+app/
+  page.tsx                          … TOP
+  category/[slug]/page.tsx          … カテゴリ一覧（大カテゴリ・小カテゴリ共通、slugで出し分け）
+  products/[id]/page.tsx            … 商品詳細
+  search/page.tsx                   … 検索結果
+  cart/page.tsx                     … カート
+  checkout/page.tsx                 … お支払い・ご購入手続き
+  checkout/complete/page.tsx        … ご注文完了
+  login/page.tsx                    … ログイン
+  register/page.tsx                 … 新規会員登録
+  mypage/page.tsx                   … マイページ（トップ）
+  mypage/orders/page.tsx            … 注文履歴
+  mypage/favorite/page.tsx          … お気に入り
+  brand/page.tsx                    … ブランド一覧
+  brand/[brandId]/page.tsx          … ブランド別商品一覧
+  ranking/page.tsx                  … ランキング
+  newarrival/page.tsx               … 新着
+  feature/page.tsx                  … 特集一覧
+  feature/[slug]/page.tsx           … 特集記事詳細
+  styling/page.tsx                  … スタイリング一覧
+  styling/[id]/page.tsx             … スタイリング詳細
+  size-guide/page.tsx               … サイズガイド
+  news/page.tsx                     … お知らせ一覧
+  news/[id]/page.tsx                … お知らせ詳細
+  guide/page.tsx                    … ご利用ガイド
+  guide/faq/page.tsx                … よくあるご質問
+  contact/page.tsx                  … お問い合わせ
+  company/page.tsx                  … 運営会社
+  privacy/page.tsx                  … プライバシーポリシー
+  terms/page.tsx                    … ご利用規約
+  legal/page.tsx                    … 特定商取引に基づく表示
+```
+
+ルーティング設計ができたら、STEP1のリンク一覧と照合し、TOPページのhref/Linkが上記パスと一致しているか確認・修正する。
+
+---
+
+## STEP 3：Partファイル生成（ページ実装）
+以下の優先順位でページを1つずつ実装する。1ページ実装するごとに、DESIGN.txt該当セクションとの整合性を確認してから次に進むこと。まとめて複数ページを一気に生成しない。
+
+### 優先度1（購入導線の根幹）
+1. category/[slug]/page.tsx（DESIGN.txt「各ページ固有仕様＞カテゴリ」）
+2. products/[id]/page.tsx（DESIGN.txt「各ページ要素＞商品詳細ページ」）
+3. cart/page.tsx（DESIGN.txt「各ページ固有仕様＞カート」）
+4. checkout/page.tsx, checkout/complete/page.tsx
+
+### 優先度2（回遊導線）
+5. brand/page.tsx, brand/[brandId]/page.tsx
+6. ranking/page.tsx
+7. newarrival/page.tsx
+8. search/page.tsx
+
+### 優先度3（コンテンツ・会員機能）
+9. feature/page.tsx, feature/[slug]/page.tsx
+10. styling/page.tsx, styling/[id]/page.tsx
+11. news/page.tsx, news/[id]/page.tsx
+12. login/page.tsx, register/page.tsx
+13. mypage/page.tsx, mypage/orders/page.tsx, mypage/favorite/page.tsx（会員機能は仮のダミーデータ・ダミー認証状態で表示だけ先に作ってよい）
+
+### 優先度4（静的・規約ページ）
+14. guide/page.tsx, guide/faq/page.tsx
+15. size-guide/page.tsx
+16. contact/page.tsx
+17. company/page.tsx
+18. privacy/page.tsx, terms/page.tsx, legal/page.tsx（DESIGN.txt「特定商取引法」セクションの内容をそのまま反映）
+
+各ページ実装時の共通ルール：
+- 商品・ブランド・特集などのデータはハードコードではなく、lib/data/ 配下にモックデータ（配列・オブジェクト）としてまとめ、各ページ／コンポーネントから参照する形にする（後でAPI連携に差し替えやすくするため）
+- 画像パスはpublic/images/配下の生成済みプレースホルダーをそのまま使う。新規で画像が必要になった場合はscripts/generate-placeholders.mjsのIMAGES配列に追記し、再実行する
+- コンポーネントは極力components/配下に切り出し、ページ間で重複させない（ProductCard, SectionHeading, Breadcrumbなど）
+
+---
+
+## STEP 4：動作確認
+各優先度グループの実装が終わるごとに、以下を確認する：
+1. TOPページから該当ページへのリンクが404にならず遷移できるか
+2. DESIGN.txtのデザイン仕様（角丸8px、アクセントカラー、フォント等）が反映されているか
+3. レスポンシブ（PC/SP）で崩れがないか
+4. コンソールにエラーが出ていないか
+
+問題なければユーザーに実装済みページ一覧を報告し、次の優先度グループに進む。
+
+---
+
+## 備考：共通画像リスト生成ルールについて
+DESIGN.txt後半に記載の「共通画像リスト生成ルール」（CSV列構成、Flow/Gensparkプロンプト生成等）は、本番撮影・生成AI画像を外部発注する際のワークフロー定義であり、今回の実装フェーズでは使用しない。現時点ではscripts/generate-placeholders.mjsによるダミー画像で進行し、本番画像が納品された時点で該当パスに上書きする。
