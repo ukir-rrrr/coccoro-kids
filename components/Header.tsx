@@ -64,10 +64,11 @@ export default function Header() {
               <Image
                 src="/images/logo.png"
                 alt="MIMORA"
-                width={150}
-                height={38}
+                width={260}
+                height={66}
                 priority
-                className="h-8 w-auto lg:h-9"
+                unoptimized
+                className="h-11 w-auto lg:h-12"
               />
             </Link>
 
@@ -142,10 +143,11 @@ export default function Header() {
             <Image
               src="/images/logo.png"
               alt="MIMORA"
-              width={130}
-              height={32}
+              width={180}
+              height={46}
               priority
-              className="h-7 w-auto"
+              unoptimized
+              className="h-9 w-auto"
             />
           </Link>
 

@@ -42,9 +42,10 @@ export default function Footer() {
               <Image
                 src="/images/logo.png"
                 alt="MIMORA"
-                width={150}
-                height={38}
-                className="h-8 w-auto"
+                width={200}
+                height={50}
+                unoptimized
+                className="h-10 w-auto"
               />
             </Link>
             <p className="mt-4 text-sm leading-relaxed">
