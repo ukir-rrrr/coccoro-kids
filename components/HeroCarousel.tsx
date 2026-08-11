@@ -18,9 +18,9 @@ const slides: Slide[] = [
   {
     image: "/images/common/hero_01.jpg",
     alt: "親子でお出かけを楽しむ日常のワンシーン",
-    eyebrow: "COCCORO KIDS",
+    eyebrow: "MIMORA",
     title: "小さな「好き」に、めいっぱい似合うを。",
-    description: "厳選ブランドの子供服・ベビー用品を、coccoro kidsで。",
+    description: "厳選ブランドの子供服・ベビー用品を、MIMORAで。",
     ctaLabel: "新着アイテムを見る",
     ctaHref: "/new-arrivals",
   },

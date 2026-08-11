@@ -1,5 +1,5 @@
 ## PROJECT_GUIDE_1.txt
-coccoro kids（キッズ用品ECサイト）実装ガイド
+MIMORA（キッズ用品ECサイト）実装ガイド
 DESIGN.txtの仕様に基づき、Next.js（App Router）+ Tailwind CSSでサイトを実装するための作業手順書です。
 DESIGN.txtが「何を作るか（仕様）」、このファイルが「どの順番で・どう作るか（実装計画）」を定義します。
 

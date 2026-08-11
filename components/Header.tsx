@@ -63,7 +63,7 @@ export default function Header() {
             <Link href="/" className={`hidden items-center md:flex ${focusRing}`}>
               <Image
                 src="/images/logo.png"
-                alt="coccoro kids"
+                alt="MIMORA"
                 width={150}
                 height={38}
                 priority
@@ -141,7 +141,7 @@ export default function Header() {
           >
             <Image
               src="/images/logo.png"
-              alt="coccoro kids"
+              alt="MIMORA"
               width={130}
               height={32}
               priority

@@ -8,7 +8,7 @@ export default function MyPageTopPage() {
         <dl className="mt-4 flex flex-col gap-3 text-sm">
           <div className="flex justify-between border-b border-[#f3f4f6] pb-3">
             <dt className="text-[#6b7280]">お名前</dt>
-            <dd className="text-[#333333]">coccoro 花子</dd>
+            <dd className="text-[#333333]">ミモラ 花子</dd>
           </div>
           <div className="flex justify-between border-b border-[#f3f4f6] pb-3">
             <dt className="text-[#6b7280]">メールアドレス</dt>

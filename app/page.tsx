@@ -9,7 +9,6 @@ import StylingSection from "@/components/StylingSection";
 import CategoryTextLinks from "@/components/CategoryTextLinks";
 import NewsSection from "@/components/NewsSection";
 import MemberBanner from "@/components/MemberBanner";
-import PaymentIcons from "@/components/PaymentIcons";
 import ProductCard from "@/components/ProductCard";
 import SectionHeading from "@/components/SectionHeading";
 import FadeIn from "@/components/FadeIn";
@@ -45,7 +44,7 @@ export default function Home() {
           <FadeIn className="flex flex-col gap-8">
             <SectionHeading
               title="FEATURE"
-              subtitle="ブランド特集からギフト選びまで、coccoro kidsが提案する特集記事"
+              subtitle="ブランド特集からギフト選びまで、MIMORAが提案する特集記事"
             />
             <FeatureSection />
           </FadeIn>
@@ -90,7 +89,7 @@ export default function Home() {
           <FadeIn className="flex flex-col gap-8">
             <SectionHeading
               title="BRAND"
-              subtitle="coccoro kidsが厳選した、信頼のキッズ・ベビーブランド"
+              subtitle="MIMORAが厳選した、信頼のキッズ・ベビーブランド"
             />
             <BrandSection />
           </FadeIn>
@@ -139,18 +138,10 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[#f9fafb] py-12 sm:py-16">
+      <section className="bg-white py-12 sm:py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <FadeIn>
             <MemberBanner />
-          </FadeIn>
-        </div>
-      </section>
-
-      <section className="bg-white py-10">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn>
-            <PaymentIcons />
           </FadeIn>
         </div>
       </section>

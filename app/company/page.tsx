@@ -29,8 +29,7 @@ export default function CompanyPage() {
       </div>
 
       <p className="mt-6 text-sm leading-relaxed text-[#333333]">
-        coccoro
-        kidsは、厳選した子供服・ベビー用品ブランドを一つの店舗に集約し、コーディネート提案やランキングから選べる「今日、何を着せるか迷わない」買い物体験を提供するキッズ用品セレクトストアです。
+        MIMORAは、厳選した子供服・ベビー用品ブランドを一つの店舗に集約し、コーディネート提案やランキングから選べる「今日、何を着せるか迷わない」買い物体験を提供するキッズ用品セレクトストアです。
       </p>
 
       <dl className="mt-8 flex flex-col divide-y divide-[#e5e7eb] border-y border-[#e5e7eb]">

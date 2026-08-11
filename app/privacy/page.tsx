@@ -35,7 +35,7 @@ export default function PrivacyPage() {
         プライバシーポリシー
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-        coccoro kids（以下「当店」といいます）は、お客様の個人情報を適切に取り扱うため、以下のとおりプライバシーポリシーを定めます。
+        MIMORA（以下「当店」といいます）は、お客様の個人情報を適切に取り扱うため、以下のとおりプライバシーポリシーを定めます。
       </p>
 
       <div className="mt-8 flex flex-col gap-8">

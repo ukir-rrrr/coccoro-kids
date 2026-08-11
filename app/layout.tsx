@@ -21,9 +21,9 @@ const mPlusRounded1c = M_PLUS_Rounded_1c({
 });
 
 export const metadata: Metadata = {
-  title: "coccoro kids（コッコロキッズ）",
+  title: "MIMORA（ミモラ）",
   description:
-    "小さな「好き」に、めいっぱい似合うを。厳選ブランドの子供服・ベビー用品を、コーディネート提案とランキングから選べるキッズ用品セレクトストア coccoro kids。",
+    "小さな「好き」に、めいっぱい似合うを。厳選ブランドの子供服・ベビー用品を、コーディネート提案とランキングから選べるキッズ用品セレクトストア MIMORA。",
 };
 
 export default function RootLayout({

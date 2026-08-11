@@ -9,7 +9,7 @@ export default function FeaturesPage() {
         FEATURE
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-        ブランド特集からギフト選びまで、coccoro kidsが提案する特集記事です。
+        ブランド特集からギフト選びまで、MIMORAが提案する特集記事です。
       </p>
       <div className="mt-8">
         <FeatureSection />

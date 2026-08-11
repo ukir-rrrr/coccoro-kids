@@ -41,7 +41,7 @@ export default function Footer() {
             <Link href="/" className={`inline-flex ${focusRing}`}>
               <Image
                 src="/images/logo.png"
-                alt="coccoro kids"
+                alt="MIMORA"
                 width={150}
                 height={38}
                 className="h-8 w-auto"
@@ -151,7 +151,7 @@ export default function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#e5e7eb] pt-6 sm:flex-row">
           <p className="text-xs">
-            &copy; 2026 coccoro kids All Rights Reserved.
+            &copy; 2026 MIMORA All Rights Reserved.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-2">
             {paymentMethods.map((method) => (

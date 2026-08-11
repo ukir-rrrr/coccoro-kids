@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 const sections: { title: string; body: string }[] = [
   {
     title: "第1条（適用）",
-    body: "本規約は、coccoro kids（以下「当店」といいます）が提供するすべてのサービスの利用に関し、当店とお客様との間の権利義務関係を定めるものです。",
+    body: "本規約は、MIMORA（以下「当店」といいます）が提供するすべてのサービスの利用に関し、当店とお客様との間の権利義務関係を定めるものです。",
   },
   {
     title: "第2条（会員登録）",

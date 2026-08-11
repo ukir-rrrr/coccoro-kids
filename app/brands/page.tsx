@@ -9,7 +9,7 @@ export default function BrandsPage() {
         ブランド一覧
       </h1>
       <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">
-        coccoro kidsが厳選した、信頼のキッズ・ベビーブランドをご紹介します。
+        MIMORAが厳選した、信頼のキッズ・ベビーブランドをご紹介します。
       </p>
       <div className="mt-8">
         <BrandSection />
