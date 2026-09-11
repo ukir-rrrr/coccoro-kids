@@ -1,0 +1,15 @@
+{
+  "baseUrl": "https://www.branshes.com",
+  "categoryUrls": [
+    "https://www.branshes.com/shop/c/cleg-wear/"
+  ],
+  "maxProducts": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "defaultCategorySlug": "legwear",
+  "categoryHref": "/category/accessories",
+  "manifestPath": "data/branshes/manifests/legwear.json",
+  "imagesDir": "public/images/products",
+  "imagesWebPath": "/images/products"
+}

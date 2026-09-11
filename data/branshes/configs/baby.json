@@ -1,0 +1,15 @@
+{
+  "baseUrl": "https://www.branshes.com",
+  "categoryUrls": [
+    "https://www.branshes.com/shop/c/cbaby/"
+  ],
+  "maxProducts": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "defaultCategorySlug": "baby",
+  "categoryHref": "/category/baby",
+  "manifestPath": "data/branshes/manifests/baby.json",
+  "imagesDir": "public/images/products",
+  "imagesWebPath": "/images/products"
+}

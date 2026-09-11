@@ -1,0 +1,15 @@
+{
+  "baseUrl": "https://www.branshes.com",
+  "categoryUrls": [
+    "https://www.branshes.com/shop/c/cshoes/"
+  ],
+  "maxProducts": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "defaultCategorySlug": "shoes",
+  "categoryHref": "/category/shoes",
+  "manifestPath": "data/branshes/manifests/shoes.json",
+  "imagesDir": "public/images/products",
+  "imagesWebPath": "/images/products"
+}

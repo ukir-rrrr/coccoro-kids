@@ -1,0 +1,15 @@
+{
+  "baseUrl": "https://www.branshes.com",
+  "categoryUrls": [
+    "https://www.branshes.com/shop/c/cjacket/"
+  ],
+  "maxProducts": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "defaultCategorySlug": "outer",
+  "categoryHref": "/category/outer",
+  "manifestPath": "data/branshes/manifests/outer.json",
+  "imagesDir": "public/images/products",
+  "imagesWebPath": "/images/products"
+}

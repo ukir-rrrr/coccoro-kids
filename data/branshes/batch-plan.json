@@ -1,0 +1,140 @@
+{
+  "version": 2,
+  "source": "branshes.com",
+  "maxProductsPerCategory": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "categories": [
+    {
+      "slug": "tops",
+      "label": "トップス",
+      "categoryHref": "/category/tops",
+      "branshesUrl": "https://www.branshes.com/shop/c/ctops/",
+      "configPath": "data/branshes/configs/tops.json",
+      "manifestPath": "data/branshes/manifests/tops.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "outer",
+      "label": "アウター",
+      "categoryHref": "/category/outer",
+      "branshesUrl": "https://www.branshes.com/shop/c/cjacket/",
+      "configPath": "data/branshes/configs/outer.json",
+      "manifestPath": "data/branshes/manifests/outer.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "bottoms",
+      "label": "ボトムス",
+      "categoryHref": "/category/bottoms",
+      "branshesUrl": "https://www.branshes.com/shop/c/cbottoms/",
+      "configPath": "data/branshes/configs/bottoms.json",
+      "manifestPath": "data/branshes/manifests/bottoms.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "onepiece",
+      "label": "ワンピース",
+      "categoryHref": "/category/onepiece",
+      "branshesUrl": "https://www.branshes.com/shop/c/conepiece/",
+      "configPath": "data/branshes/configs/onepiece.json",
+      "manifestPath": "data/branshes/manifests/onepiece.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "baby",
+      "label": "ベビーウェア",
+      "categoryHref": "/category/baby",
+      "branshesUrl": "https://www.branshes.com/shop/c/cbaby/",
+      "configPath": "data/branshes/configs/baby.json",
+      "manifestPath": "data/branshes/manifests/baby.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "shoes",
+      "label": "シューズ・靴",
+      "categoryHref": "/category/shoes",
+      "branshesUrl": "https://www.branshes.com/shop/c/cshoes/",
+      "configPath": "data/branshes/configs/shoes.json",
+      "manifestPath": "data/branshes/manifests/shoes.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "legwear",
+      "label": "レッグウェア",
+      "categoryHref": "/category/accessories",
+      "branshesUrl": "https://www.branshes.com/shop/c/cleg-wear/",
+      "configPath": "data/branshes/configs/legwear.json",
+      "manifestPath": "data/branshes/manifests/legwear.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "bags",
+      "label": "かばん・バッグ",
+      "categoryHref": "/category/bags",
+      "branshesUrl": "https://www.branshes.com/shop/c/cbag/",
+      "configPath": "data/branshes/configs/bags.json",
+      "manifestPath": "data/branshes/manifests/bags.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "hats",
+      "label": "帽子",
+      "categoryHref": "/category/accessories",
+      "branshesUrl": "https://www.branshes.com/shop/c/ccap-hat/",
+      "configPath": "data/branshes/configs/hats.json",
+      "manifestPath": "data/branshes/manifests/hats.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "underwear",
+      "label": "アンダーウェア",
+      "categoryHref": "/category/innerwear",
+      "branshesUrl": "https://www.branshes.com/shop/c/cunderwea/",
+      "configPath": "data/branshes/configs/underwear.json",
+      "manifestPath": "data/branshes/manifests/underwear.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "pajamas",
+      "label": "パジャマ・ルームウェア",
+      "categoryHref": "/category/innerwear",
+      "branshesUrl": "https://www.branshes.com/shop/c/cpajamas/",
+      "configPath": "data/branshes/configs/pajamas.json",
+      "manifestPath": "data/branshes/manifests/pajamas.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "formal",
+      "label": "フォーマル・セレモニー",
+      "categoryHref": "/category/goods",
+      "branshesUrl": "https://www.branshes.com/shop/c/cformal/",
+      "configPath": "data/branshes/configs/formal.json",
+      "manifestPath": "data/branshes/manifests/formal.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    },
+    {
+      "slug": "other-goods",
+      "label": "その他グッズ",
+      "categoryHref": "/category/goods",
+      "branshesUrl": "https://www.branshes.com/shop/c/cother8/",
+      "configPath": "data/branshes/configs/other-goods.json",
+      "manifestPath": "data/branshes/manifests/other-goods.json",
+      "expectedMinProducts": 13,
+      "status": "pending"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "baseUrl": "https://www.branshes.com",
+  "categoryUrls": [
+    "https://www.branshes.com/shop/c/cbag/"
+  ],
+  "maxProducts": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "defaultCategorySlug": "bags",
+  "categoryHref": "/category/bags",
+  "manifestPath": "data/branshes/manifests/bags.json",
+  "imagesDir": "public/images/products",
+  "imagesWebPath": "/images/products"
+}

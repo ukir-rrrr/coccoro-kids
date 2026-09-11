@@ -1,0 +1,15 @@
+{
+  "baseUrl": "https://www.branshes.com",
+  "categoryUrls": [
+    "https://www.branshes.com/shop/c/cbottoms/"
+  ],
+  "maxProducts": 13,
+  "maxImagesPerProduct": 8,
+  "requestIntervalSec": 1.5,
+  "concurrency": 2,
+  "defaultCategorySlug": "bottoms",
+  "categoryHref": "/category/bottoms",
+  "manifestPath": "data/branshes/manifests/bottoms.json",
+  "imagesDir": "public/images/products",
+  "imagesWebPath": "/images/products"
+}
