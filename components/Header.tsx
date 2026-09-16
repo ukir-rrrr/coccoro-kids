@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { categories, genderEntries } from "@/lib/categories";
+import { genderEntries, getCategoriesWithProducts } from "@/lib/categories";
 import { useCart } from "@/components/CartProvider";
 import { useFavorites } from "@/components/FavoritesProvider";
 import {
@@ -18,7 +18,6 @@ import {
 } from "@/components/icons";
 
 const mainNavLinks = [
-  { label: "ブランド一覧", href: "/brands" },
   { label: "ランキング", href: "/ranking" },
   { label: "新着", href: "/new-arrivals" },
   { label: "特集", href: "/features" },
@@ -38,6 +37,7 @@ export default function Header() {
 
   const isActive = (href: string) => pathname.startsWith(href);
   const closeMobileMenu = () => setMobileOpen(false);
+  const categories = getCategoriesWithProducts();
 
   return (
     <div>
@@ -206,7 +206,7 @@ export default function Header() {
             <input
               type="text"
               name="q"
-              placeholder="商品名・ブランド名で検索"
+              placeholder="商品名で検索"
               className={`flex-1 rounded-lg border border-[#d1d5db] px-4 py-2.5 text-sm text-[#333333] focus:border-accent1 focus:outline-none focus:ring-1 focus:ring-accent1 ${focusRing}`}
             />
             <button
@@ -249,7 +249,7 @@ export default function Header() {
               <input
                 type="text"
                 name="q"
-                placeholder="商品名・ブランド名で検索"
+                placeholder="商品名で検索"
                 className={`flex-1 rounded-lg border border-[#d1d5db] px-4 py-2.5 text-sm text-[#333333] focus:border-accent1 focus:outline-none focus:ring-1 focus:ring-accent1 ${focusRing}`}
               />
               <button

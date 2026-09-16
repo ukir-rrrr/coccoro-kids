@@ -41,7 +41,7 @@ export default function ProductCard({ product }: { product: Product }) {
         <div className="relative aspect-square overflow-hidden rounded-lg bg-[#f3f4f6]">
           <Image
             src={images[0]}
-            alt={`${brand} ${name}`}
+            alt={name}
             fill
             sizes="(min-width: 1024px) 23vw, (min-width: 640px) 30vw, 46vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
@@ -74,8 +74,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       <div className="mt-3 flex items-start justify-between gap-2">
         <Link href={`/products/${slug}`} className={`min-w-0 ${focusRing} rounded-lg`}>
-          <p className="truncate text-xs text-[#6b7280]">{brand}</p>
-          <p className="mt-0.5 line-clamp-2 text-sm leading-snug text-[#333333]">{name}</p>
+          <p className="line-clamp-2 text-sm leading-snug text-[#333333]">{name}</p>
           <p className="mt-1 flex items-baseline gap-2">
             {isSale ? (
               <>

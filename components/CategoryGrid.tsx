@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { categories } from "@/lib/categories";
+import { getCategoriesWithProducts } from "@/lib/categories";
 import { categoryIcons } from "@/components/category-icons";
 
 export default function CategoryGrid() {
+  const categories = getCategoriesWithProducts();
+
   return (
     <div className="grid grid-cols-3 gap-3 sm:grid-cols-4 sm:gap-4 lg:grid-cols-5">
       {categories.map((category) => {

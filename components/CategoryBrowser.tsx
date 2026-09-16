@@ -16,55 +16,27 @@ function toggle(list: string[], value: string): string[] {
 }
 
 export default function CategoryBrowser({ products }: { products: Product[] }) {
-  const brands = useMemo(
-    () => Array.from(new Set(products.map((product) => product.brand))).sort(),
-    [products],
-  );
   const sizes = useMemo(
     () => Array.from(new Set(products.flatMap((product) => product.sizes.map((s) => s.label)))),
     [products],
   );
 
-  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
   const [priceBandIndex, setPriceBandIndex] = useState(0);
 
   const priceBand = priceBands[priceBandIndex];
   const filtered = products.filter((product) => {
     const price = product.salePrice ?? product.price;
-    const matchesBrand = selectedBrands.length === 0 || selectedBrands.includes(product.brand);
     const matchesSize =
       selectedSizes.length === 0 ||
       product.sizes.some((size) => size.inStock && selectedSizes.includes(size.label));
     const matchesPrice = price >= priceBand.min && price <= priceBand.max;
-    return matchesBrand && matchesSize && matchesPrice;
+    return matchesSize && matchesPrice;
   });
 
   return (
     <div className="grid grid-cols-1 gap-8 lg:grid-cols-[240px_1fr]">
       <aside className="flex flex-col gap-8">
-        {brands.length > 0 && (
-          <div>
-            <h2 className="text-sm font-bold text-[#333333]">ブランドで絞り込む</h2>
-            <div className="mt-3 flex flex-col gap-2">
-              {brands.map((brand) => (
-                <label
-                  key={brand}
-                  className="flex items-center gap-2 text-sm text-[#333333]"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedBrands.includes(brand)}
-                    onChange={() => setSelectedBrands(toggle(selectedBrands, brand))}
-                    className="h-4 w-4 rounded border-[#d1d5db] text-accent1 focus:ring-accent1"
-                  />
-                  {brand}
-                </label>
-              ))}
-            </div>
-          </div>
-        )}
-
         {sizes.length > 0 && (
           <div>
             <h2 className="text-sm font-bold text-[#333333]">サイズで絞り込む</h2>

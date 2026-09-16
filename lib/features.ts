@@ -1,57 +1,125 @@
+import { getProductBySlug, products, type Gender, type Product } from "@/lib/products";
+
+export type FeatureProductQuery = {
+  categories?: string[];
+  genders?: Gender[];
+  /** 商品名に含まれる語のいずれか（正規表現） */
+  namePattern?: string;
+  limit?: number;
+};
+
 export type Feature = {
   slug: string;
   title: string;
   description: string;
   image: string;
   body: string[];
-  relatedProductSlugs: string[];
+  productQuery: FeatureProductQuery;
+  /** 一覧の先頭に固定したい商品 slug */
+  highlightSlugs?: string[];
 };
 
-// DESIGN.txt「追加ページ(G2-2) > 特集」の4テーマに対応
 export const features: Feature[] = [
   {
     slug: "brand-special",
-    title: "今、選ばれる人気ブランド特集",
-    description: "MIMORAが厳選するブランドの魅力をまとめて紹介",
-    image: "/images/features/brand-special.jpg",
+    title: "秋先のレイヤード＆アウター特集",
+    description: "気温差のある季節に活躍する長袖と羽織りをセレクト",
+    image: "/images/features/autumn-layer-outer.jpg",
     body: [
-      "MIMORAでは、子供服・ベビー用品を専門に手がける実力派ブランドを厳選して取り扱っています。デザイン性はもちろん、素材の心地よさや縫製の丁寧さまで、実際にスタッフが着用・検品したうえでラインナップに加えています。",
-      "オーガニックコットンを使ったベーシックウェアが人気の「Petit Marché」、女の子らしい甘さが魅力の「Ronde Fleur」、元気に歩き回る子供のためのシューズ＆バッグを展開する「Little Step」など、それぞれに得意分野があります。",
-      "今回はその中から、特に反響の大きかったアイテムをピックアップしてご紹介します。",
+      "朝晩はひんやり、昼間はまだ暑い——秋は重ね着が活きる季節です。長袖Tシャツにライトアウターを一枚足すだけで、体温調節もしやすくなります。",
+      "MIMORAでは、ジャケットやパーカー、袖の切り替えデザインのトップスなど、レイヤードしやすいアイテムをラインナップ。通園・通学から週末のお出かけまで、これからの季節の定番をまとめてご紹介します。",
     ],
-    relatedProductSlugs: ["basic-crew-tshirt", "flower-onepiece", "canvas-sneaker"],
+    productQuery: {
+      categories: ["/category/outer", "/category/tops"],
+      namePattern: "長袖|ジャケット|パーカ|アウター|切替|トレーナ|ブルゾン|羽織",
+      limit: 12,
+    },
+    highlightSlugs: ["4580802483486", "4580802554636", "4580802508622"],
   },
   {
     slug: "seasonal-function",
-    title: "夏を快適に過ごす機能性アイテム特集",
-    description: "接触冷感・UVカットなど季節に合わせた機能素材アイテム",
-    image: "/images/features/seasonal-function.jpg",
+    title: "チェック＆デニムの秋コーデ",
+    description: "これからの季節に使える定番柄とボトムス",
+    image: "/images/features/autumn-check-denim.jpg",
     body: [
-      "気温が高くなるこれからの季節、子供たちが快適に過ごせるかどうかは服選びで大きく変わります。汗をかいてもべたつきにくい素材や、通気性の良いつくりのアイテムを選ぶのがポイントです。",
-      "今回は、暑い季節でも動きやすく、洗濯にも強い機能性アイテムをセレクトしました。公園遊びやお出かけなど、アクティブな毎日にぴったりの一枚を見つけてください。",
+      "チェック柄のワンピースや、デニムのボトムスは、秋のコーディネートの軸になりやすい定番です。トップスを替えるだけで印象が変わるので、ママの買い足しにもおすすめ。",
+      "男の子向けのテーパードデニムから、女の子向けのギンガムワンピまで、実際に取り扱いのあるアイテムからピックアップしました。サイズ展開も商品ページでご確認ください。",
     ],
-    relatedProductSlugs: ["border-tshirt", "canvas-sneaker", "ribbon-sneaker"],
+    productQuery: {
+      categories: ["/category/bottoms", "/category/onepiece", "/category/tops"],
+      namePattern: "デニム|チェック|チュール|ワンピ|パンツ|スカート",
+      limit: 12,
+    },
+    highlightSlugs: ["4580802474125", "2011000496845", "4580802543555"],
   },
   {
     slug: "baby-gift",
-    title: "贈って喜ばれる出産祝いギフト特集",
-    description: "予算・性別別に選べるベビーギフトセットのご紹介",
+    title: "贈って喜ばれるベビーギフト特集",
+    description: "出産祝いに選ばれやすいベビーウェアと小物",
     image: "/images/features/baby-gift.jpg",
     body: [
-      "出産祝いは、贈る相手のセンスに寄り添いながらも実用的なアイテムを選びたいもの。MIMORAでは、肌にやさしい素材のロンパースやパジャマなど、贈り物にも選ばれているアイテムをまとめました。",
-      "性別を問わず使いやすいカラー展開のものから、男の子・女の子向けのはっきりとしたデザインまで幅広くご用意しています。ラッピングにも対応していますので、ぜひ大切な方への贈り物としてご検討ください。",
+      "出産祝いは、肌にやさしく日常使いできるものを選びたいもの。ロンパースやジャンパースカート、ボディースーツなど、ベビーの肌に配慮したアイテムを中心にセレクトしました。",
+      "性別を問わず使いやすいデザインから、はっきりしたモチーフ付きまで幅広くご用意しています。ギフト包装のご相談もお問い合わせから承ります。",
     ],
-    relatedProductSlugs: ["cotton-rompers", "star-print-rompers", "soft-pajama-set"],
+    productQuery: {
+      categories: ["/category/baby"],
+      genders: ["baby"],
+      limit: 12,
+    },
+    highlightSlugs: ["4580802449260", "4580802433511", "2004000039228"],
   },
   {
     slug: "coordinate-recommend",
-    title: "男の子・女の子・ベビーのおすすめコーデ",
-    description: "今の気分で選べる、年代別スタイリング提案",
-    image: "/images/features/coordinate-recommend.jpg",
+    title: "男の子・女の子・ベビーの秋コーデ",
+    description: "BOY / GIRL / BABY それぞれのおすすめアイテム",
+    image: "/images/features/autumn-kids-coordinate.jpg",
     body: [
-      "「今日、何を着せるか迷わない」をコンセプトに、年代・性別別のおすすめコーディネートをご紹介します。単品でも着回しやすいアイテムばかりなので、気になったものから取り入れてみてください。",
-      "詳しいコーディネート事例は、スタイリングページでも紹介しています。あわせてチェックしてみてください。",
+      "「今日、何を着せるか迷わない」をコンセプトに、性別・年代別のおすすめをまとめました。トップスとボトムス、ワンピースなど、単品でも合わせやすいアイテムを中心にピックアップしています。",
+      "気に入ったアイテムから取り入れてみてください。コーディネートの組み合わせ例はスタイリングページでもご覧いただけます。",
     ],
-    relatedProductSlugs: ["basic-crew-tshirt", "flower-onepiece", "soft-pajama-set"],
+    productQuery: {
+      categories: ["/category/tops", "/category/bottoms", "/category/onepiece"],
+      limit: 12,
+    },
+    highlightSlugs: ["4580802416354", "4580802493928", "4580802449222"],
   },
 ];
+
+function dedupeByName(list: Product[]): Product[] {
+  const seen = new Set<string>();
+  const out: Product[] = [];
+  for (const product of list) {
+    const key = product.name.trim();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(product);
+  }
+  return out;
+}
+
+export function getFeatureProducts(feature: Feature): Product[] {
+  const limit = feature.productQuery.limit ?? 12;
+  const nameRe = feature.productQuery.namePattern
+    ? new RegExp(feature.productQuery.namePattern)
+    : null;
+
+  const highlights = (feature.highlightSlugs ?? [])
+    .map((slug) => getProductBySlug(slug))
+    .filter((product): product is Product => product !== undefined);
+
+  const highlightIds = new Set(highlights.map((product) => product.id));
+
+  const candidates = products
+    .filter((product) => {
+      if (highlightIds.has(product.id)) return false;
+      const { categories, genders } = feature.productQuery;
+      if (categories?.length && !categories.includes(product.category)) return false;
+      if (genders?.length && !genders.includes(product.gender)) return false;
+      if (nameRe && !nameRe.test(product.name)) return false;
+      return true;
+    })
+    .sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99));
+
+  const merged = dedupeByName([...highlights, ...candidates]);
+  return merged.slice(0, limit);
+}

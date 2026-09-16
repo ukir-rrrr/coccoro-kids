@@ -58,10 +58,9 @@ export default function CartPage() {
                 </Link>
                 <div className="flex flex-1 flex-col justify-between">
                   <div>
-                    <p className="text-xs text-[#6b7280]">{item.brand}</p>
                     <Link
                       href={`/products/${item.slug}`}
-                      className="mt-0.5 block text-sm text-[#333333] transition-colors duration-200 hover:text-accent1"
+                      className="block text-sm text-[#333333] transition-colors duration-200 hover:text-accent1"
                     >
                       {item.name}
                     </Link>

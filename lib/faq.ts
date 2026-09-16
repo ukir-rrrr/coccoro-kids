@@ -8,7 +8,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     question: "支払い方法を教えてください。",
-    answer: "クレジットカード、銀行振込、Apple Pay、代金引換に対応しています（KOMOJUによる決済）。",
+    answer: "クレジットカード、銀行振込、Apple Pay に対応しています（KOMOJUによる決済）。",
   },
   {
     question: "商品はいつ届きますか？",

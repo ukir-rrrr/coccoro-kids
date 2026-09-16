@@ -63,16 +63,20 @@ export default async function StylingDetailPage({
 
       <p className="mt-6 text-sm leading-relaxed text-[#333333]">{example.description}</p>
 
-      {items.length > 0 && (
-        <section className="mt-12 border-t border-[#e5e7eb] pt-8">
-          <h2 className="font-heading text-lg font-bold text-[#333333]">着用アイテム</h2>
-          <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6">
+      <section className="mt-12 border-t border-[#e5e7eb] pt-8">
+        <h2 className="font-heading text-lg font-bold text-[#333333]">着用アイテム</h2>
+        {items.length > 0 ? (
+          <div className="mt-6 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3">
             {items.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
-        </section>
-      )}
+        ) : (
+          <p className="mt-4 text-sm text-[#6b7280]">
+            掲載中の商品を準備しています。
+          </p>
+        )}
+      </section>
     </article>
   );
 }

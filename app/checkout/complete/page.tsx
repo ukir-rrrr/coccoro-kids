@@ -1,8 +1,13 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import ClearCartAfterKomoju from "@/components/ClearCartAfterKomoju";
 
 export default function CheckoutCompletePage() {
   return (
     <div className="mx-auto flex max-w-2xl flex-col items-center gap-6 px-4 py-20 text-center sm:px-6">
+      <Suspense fallback={null}>
+        <ClearCartAfterKomoju />
+      </Suspense>
       <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent1 text-3xl text-white">
         ✓
       </span>

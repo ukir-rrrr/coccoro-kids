@@ -1,11 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
-import { InstagramIcon, LineIcon, XSocialIcon } from "@/components/icons";
-import { paymentMethods } from "@/lib/payments";
 
 const shopLinks = [
   { label: "カテゴリ一覧", href: "/category" },
-  { label: "ブランド一覧", href: "/brands" },
   { label: "ランキング", href: "/ranking" },
   { label: "新着アイテム", href: "/new-arrivals" },
   { label: "特集", href: "/features" },
@@ -40,7 +37,7 @@ export default function Footer() {
           <div>
             <Link href="/" className={`inline-flex ${focusRing}`}>
               <Image
-                src="/images/logo.png"
+                src="/images/logo-transparent.png"
                 alt="MIMORA"
                 width={200}
                 height={50}
@@ -51,29 +48,6 @@ export default function Footer() {
             <p className="mt-4 text-sm leading-relaxed">
               小さな「好き」に、めいっぱい似合うを。
             </p>
-            <div className="mt-5 flex items-center gap-4">
-              <a
-                href="#"
-                aria-label="Instagram"
-                className={`text-xl transition-colors duration-200 hover:text-accent1 ${focusRing}`}
-              >
-                <InstagramIcon />
-              </a>
-              <a
-                href="#"
-                aria-label="X（旧Twitter）"
-                className={`text-xl transition-colors duration-200 hover:text-accent1 ${focusRing}`}
-              >
-                <XSocialIcon />
-              </a>
-              <a
-                href="#"
-                aria-label="LINE公式アカウント"
-                className={`text-xl transition-colors duration-200 hover:text-accent1 ${focusRing}`}
-              >
-                <LineIcon />
-              </a>
-            </div>
           </div>
 
           <div>
@@ -150,20 +124,10 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t border-[#e5e7eb] pt-6 sm:flex-row">
-          <p className="text-xs">
+        <div className="mt-12 border-t border-[#e5e7eb] pt-6">
+          <p className="text-center text-xs sm:text-left">
             &copy; 2026 MIMORA All Rights Reserved.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            {paymentMethods.map((method) => (
-              <span
-                key={method}
-                className="rounded-lg border border-[#d1d5db] bg-white px-2.5 py-1 text-xs text-[#6b7280]"
-              >
-                {method}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
     </footer>

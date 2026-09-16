@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import ProductCard from "@/components/ProductCard";
-import { getRanking, type Gender } from "@/lib/products";
+import { getRanking } from "@/lib/ranking";
+import type { Gender } from "@/lib/products";
 
 const tabs: { label: string; value: Gender }[] = [
   { label: "BOY", value: "boy" },

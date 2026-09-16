@@ -1,0 +1,129 @@
+{
+  "updatedAt": "2026-09-14T10:15:00+09:00",
+  "completedSlugs": [
+    "tops",
+    "outer",
+    "bottoms",
+    "onepiece",
+    "baby",
+    "shoes",
+    "legwear",
+    "bags",
+    "hats",
+    "underwear",
+    "pajamas",
+    "formal",
+    "other-goods"
+  ],
+  "pendingSlugs": [],
+  "runs": [
+    {
+      "slug": "tops",
+      "label": "トップス",
+      "products": 13,
+      "images": 95,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "outer",
+      "label": "アウター",
+      "products": 13,
+      "images": 89,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "bottoms",
+      "label": "ボトムス",
+      "products": 13,
+      "images": 74,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "onepiece",
+      "label": "ワンピース",
+      "products": 13,
+      "images": 93,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "baby",
+      "label": "ベビーウェア",
+      "products": 13,
+      "images": 72,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "shoes",
+      "label": "シューズ・靴",
+      "products": 13,
+      "images": 49,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "legwear",
+      "label": "レッグウェア",
+      "products": 13,
+      "images": 62,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "bags",
+      "label": "かばん・バッグ",
+      "products": 13,
+      "images": 72,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "hats",
+      "label": "帽子",
+      "products": 13,
+      "images": 61,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "underwear",
+      "label": "アンダーウェア",
+      "products": 13,
+      "images": 40,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "pajamas",
+      "label": "パジャマ・ルームウェア",
+      "products": 13,
+      "images": 89,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "formal",
+      "label": "フォーマル・セレモニー",
+      "products": 13,
+      "images": 93,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    },
+    {
+      "slug": "other-goods",
+      "label": "その他グッズ",
+      "products": 13,
+      "images": 60,
+      "failures": 0,
+      "completedAt": "2026-09-14"
+    }
+  ],
+  "totals": {
+    "products": 169,
+    "images": 949
+  }
+}

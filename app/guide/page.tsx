@@ -16,7 +16,7 @@ const sections: { title: string; body: string }[] = [
   },
   {
     title: "4. お支払い方法",
-    body: "クレジットカード、銀行振込、Apple Pay、代金引換に対応しています（KOMOJUによる決済）。",
+    body: "クレジットカード、銀行振込、Apple Pay に対応しています（KOMOJUによる決済）。",
   },
   {
     title: "5. 配送・送料について",

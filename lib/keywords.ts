@@ -3,13 +3,14 @@ export type Keyword = {
   href: string;
 };
 
+/** 検索語は lib/products の商品名に含まれる文字列（/search?q=） */
 export const trendingKeywords: Keyword[] = [
-  { label: "夏の新作", href: "/search?q=夏の新作" },
-  { label: "タイムセール", href: "/search?q=タイムセール" },
-  { label: "出産祝いギフト", href: "/search?q=出産祝いギフト" },
-  { label: "甚平・浴衣", href: "/search?q=甚平" },
-  { label: "レインコート", href: "/search?q=レインコート" },
-  { label: "通園リュック", href: "/search?q=通園リュック" },
-  { label: "オーガニックコットン", href: "/search?q=オーガニックコットン" },
-  { label: "福袋", href: "/search?q=福袋" },
+  { label: "チュール", href: "/search?q=チュール" },
+  { label: "ワンピース", href: "/search?q=ワンピ" },
+  { label: "Tシャツ", href: "/search?q=Tシャツ" },
+  { label: "チェック", href: "/search?q=チェック" },
+  { label: "デニム", href: "/search?q=デニム" },
+  { label: "ルームウェア", href: "/search?q=ルームウェア" },
+  { label: "リュック", href: "/search?q=リュック" },
+  { label: "サンダル", href: "/search?q=サンダル" },
 ];

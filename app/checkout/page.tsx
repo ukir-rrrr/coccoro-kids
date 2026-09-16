@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -14,24 +14,79 @@ const paymentOptions = [
   { value: "credit-card", label: "クレジットカード" },
   { value: "bank-transfer", label: "銀行振込" },
   { value: "apple-pay", label: "Apple Pay" },
-  { value: "cod", label: "代金引換" },
 ];
 
 const inputClass =
   "rounded-lg border border-[#d1d5db] px-4 py-2.5 text-sm text-[#333333] focus:border-accent1 focus:outline-none focus:ring-1 focus:ring-accent1";
 
 export default function CheckoutPage() {
-  const router = useRouter();
-  const { items, totalPrice, clearCart } = useCart();
+  const searchParams = useSearchParams();
+  const { items, totalPrice } = useCart();
   const [paymentMethod, setPaymentMethod] = useState(paymentOptions[0].value);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [komojuConfigured, setKomojuConfigured] = useState(false);
 
   const shippingFee = totalPrice === 0 || totalPrice >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_FEE;
   const grandTotal = totalPrice + shippingFee;
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    fetch("/api/komoju/status")
+      .then((r) => r.json())
+      .then((data: { configured?: boolean }) => {
+        setKomojuConfigured(Boolean(data.configured));
+      })
+      .catch(() => {
+        setKomojuConfigured(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    if (payment === "cancelled") {
+      setError("決済がキャンセルされたか、完了しませんでした。もう一度お試しください。");
+    } else if (payment === "missing_session") {
+      setError("決済セッションが見つかりませんでした。最初からやり直してください。");
+    }
+  }, [searchParams]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    clearCart();
-    router.push("/checkout/complete");
+    setError(null);
+    setSubmitting(true);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const email = String(formData.get("email") ?? "").trim();
+
+    try {
+      if (!komojuConfigured) {
+        throw new Error(
+          "決済が未設定です。.env.local に KOMOJU_SECRET_KEY（sk_test_...）を設定してください。",
+        );
+      }
+
+      const res = await fetch("/api/komoju/session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          amount: grandTotal,
+          email,
+          paymentMethod,
+          orderRef: `mimora-${Date.now()}`,
+        }),
+      });
+
+      const data = (await res.json()) as { sessionUrl?: string; error?: string };
+      if (!res.ok || !data.sessionUrl) {
+        throw new Error(data.error ?? "決済ページの起動に失敗しました");
+      }
+
+      window.location.href = data.sessionUrl;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "エラーが発生しました");
+      setSubmitting(false);
+    }
   };
 
   if (items.length === 0) {
@@ -61,6 +116,12 @@ export default function CheckoutPage() {
         お支払い・ご購入手続き
       </h1>
 
+      {error && (
+        <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          {error}
+        </p>
+      )}
+
       <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-col gap-8">
           <section>
@@ -68,23 +129,23 @@ export default function CheckoutPage() {
             <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <label className="flex flex-col gap-1 text-xs text-gray-500">
                 お名前
-                <input type="text" required className={inputClass} />
+                <input type="text" name="name" required className={inputClass} />
               </label>
               <label className="flex flex-col gap-1 text-xs text-gray-500">
                 電話番号
-                <input type="tel" required className={inputClass} />
+                <input type="tel" name="tel" required className={inputClass} />
               </label>
               <label className="flex flex-col gap-1 text-xs text-gray-500">
                 郵便番号
-                <input type="text" required className={inputClass} />
+                <input type="text" name="postal" required className={inputClass} />
               </label>
               <label className="flex flex-col gap-1 text-xs text-gray-500">
                 メールアドレス
-                <input type="email" required className={inputClass} />
+                <input type="email" name="email" required className={inputClass} />
               </label>
               <label className="flex flex-col gap-1 text-xs text-gray-500 sm:col-span-2">
                 住所
-                <input type="text" required className={inputClass} />
+                <input type="text" name="address" required className={inputClass} />
               </label>
             </div>
           </section>
@@ -113,6 +174,11 @@ export default function CheckoutPage() {
                 </label>
               ))}
             </div>
+            {!komojuConfigured && (
+              <p className="mt-2 text-xs text-[#9ca3af]">
+                決済未設定時は「支払いページへ」を押すとエラーになります。
+              </p>
+            )}
           </section>
         </div>
 
@@ -152,9 +218,10 @@ export default function CheckoutPage() {
 
           <button
             type="submit"
-            className="mt-6 w-full rounded-lg bg-accent1 px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#ff5c70] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent1"
+            disabled={submitting}
+            className="mt-6 w-full rounded-lg bg-accent1 px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-[#ff5c70] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent1 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            ご注文を確定する
+            {submitting ? "支払いページへ移動中..." : "支払いページへ"}
           </button>
         </div>
       </form>

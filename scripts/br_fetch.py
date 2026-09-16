@@ -71,6 +71,11 @@ DETAIL_IMG_RE = re.compile(
     r"/img/goods/(\d{2}-\d{2}-\d{3}-\d{2})(?:_(\d{2}))?\.jpg",
     re.I,
 )
+GENDER_FOR_GOODS_RE = re.compile(
+    r'"genre":"(boy|girl|baby)"[^}]*"goods":"(\d+)"',
+    re.I,
+)
+GENDER_GENRE_RE = re.compile(r'"genre":"(boy|girl|baby)"', re.I)
 
 
 @dataclass
@@ -296,6 +301,27 @@ def clean_product_name(name: str) -> str:
 
 
 def parse_etm_detail(page_html: str) -> dict:
+    marker = 'property="etm:goods_detail"'
+    idx = page_html.find(marker)
+    if idx >= 0:
+        content_key = 'content="'
+        start = page_html.find(content_key, idx)
+        if start >= 0:
+            start += len(content_key)
+            if start < len(page_html) and page_html[start] == "{":
+                depth = 0
+                for pos in range(start, min(start + 8000, len(page_html))):
+                    char = page_html[pos]
+                    if char == "{":
+                        depth += 1
+                    elif char == "}":
+                        depth -= 1
+                        if depth == 0:
+                            try:
+                                return json.loads(page_html[start : pos + 1])
+                            except json.JSONDecodeError:
+                                break
+
     match = ETM_META_RE.search(page_html)
     if not match:
         return {}
@@ -303,6 +329,22 @@ def parse_etm_detail(page_html: str) -> dict:
         return json.loads(html.unescape(match.group(1)))
     except json.JSONDecodeError:
         return {}
+
+
+def parse_gender_from_html(page_html: str, goods_id: str) -> str | None:
+    for match in GENDER_FOR_GOODS_RE.finditer(page_html):
+        gender, gid = match.group(1).lower(), match.group(2)
+        if gid == goods_id:
+            return gender
+    match = GENDER_GENRE_RE.search(page_html)
+    return match.group(1).lower() if match else None
+
+
+def parse_yen(value: object) -> int:
+    text = str(value or "").strip().replace(",", "")
+    if not text or not text.isdigit():
+        return 0
+    return int(text)
 
 
 def infer_image_base_from_detail(page_html: str, fallback: str) -> str:
@@ -405,7 +447,8 @@ def enrich_product(cfg: Config, product: dict) -> dict:
 
     detail = parse_etm_detail(detail_html)
     name = clean_product_name(detail.get("name") or product.get("name") or product["goodsId"])
-    price = int(detail.get("price") or 0)
+    price = parse_yen(detail.get("price"))
+    regular = parse_yen(detail.get("regular"))
     is_sale = str(detail.get("sale_fg", "")).lower() == "true"
     image_base = infer_image_base_from_detail(detail_html, product.get("imageBase", ""))
     image_urls = extract_ordered_image_urls(
@@ -414,6 +457,7 @@ def enrich_product(cfg: Config, product: dict) -> dict:
 
     product["name"] = name
     product["price"] = price
+    product["regularPrice"] = regular
     product["isSale"] = is_sale
     product["imageBase"] = image_base
     product["imageUrls"] = image_urls
@@ -422,6 +466,7 @@ def enrich_product(cfg: Config, product: dict) -> dict:
     product["size"] = detail.get("variation_name1") or ""
     product["itemCode"] = f"br:{product['goodsId']}"
     product["categoryHref"] = cfg.category_href
+    product["gender"] = parse_gender_from_html(detail_html, product["goodsId"])
     return product
 
 
@@ -453,7 +498,8 @@ def process_product(cfg: Config, product: dict) -> dict:
         "id": product_id,
         "slug": product_id,
         "name": product.get("name") or product_id,
-        "price": int(product.get("price") or 0),
+        "price": parse_yen(product.get("price")),
+        "regularPrice": parse_yen(product.get("regularPrice")),
         "isSale": bool(product.get("isSale")),
         "brand": product.get("brand") or "branshes",
         "categorySlug": cfg.default_category_slug,
@@ -463,6 +509,7 @@ def process_product(cfg: Config, product: dict) -> dict:
         "rank": product.get("rank"),
         "color": product.get("color") or "",
         "size": product.get("size") or "",
+        "gender": product.get("gender") or "",
         "images": saved_paths,
         "sourceUrls": saved_sources,
     }

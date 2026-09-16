@@ -4,7 +4,6 @@ import CategoryGrid from "@/components/CategoryGrid";
 import FeatureSection from "@/components/FeatureSection";
 import RankingSection from "@/components/RankingSection";
 import KeywordTags from "@/components/KeywordTags";
-import BrandSection from "@/components/BrandSection";
 import StylingSection from "@/components/StylingSection";
 import CategoryTextLinks from "@/components/CategoryTextLinks";
 import NewsSection from "@/components/NewsSection";
@@ -12,7 +11,8 @@ import MemberBanner from "@/components/MemberBanner";
 import ProductCard from "@/components/ProductCard";
 import SectionHeading from "@/components/SectionHeading";
 import FadeIn from "@/components/FadeIn";
-import { getNewArrivals, getRecommended } from "@/lib/products";
+import { getRecommended } from "@/lib/ranking";
+import { getNewArrivals } from "@/lib/products";
 
 export default function Home() {
   const newArrivals = getNewArrivals();
@@ -44,7 +44,7 @@ export default function Home() {
           <FadeIn className="flex flex-col gap-8">
             <SectionHeading
               title="FEATURE"
-              subtitle="ブランド特集からギフト選びまで、MIMORAが提案する特集記事"
+              subtitle="季節のコーデからギフト選びまで、MIMORAが提案する特集"
             />
             <FeatureSection />
           </FadeIn>
@@ -80,18 +80,6 @@ export default function Home() {
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      <section className="bg-white py-12 sm:py-16">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <FadeIn className="flex flex-col gap-8">
-            <SectionHeading
-              title="BRAND"
-              subtitle="MIMORAが厳選した、信頼のキッズ・ベビーブランド"
-            />
-            <BrandSection />
           </FadeIn>
         </div>
       </section>

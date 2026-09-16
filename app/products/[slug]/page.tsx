@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { categories } from "@/lib/categories";
 import { getProductBySlug, getRelatedProducts, products } from "@/lib/products";
-import { getReviews } from "@/lib/reviews";
 import { stylingExamples } from "@/lib/styling";
 import Breadcrumb from "@/components/Breadcrumb";
 import ProductGallery from "@/components/ProductGallery";
@@ -28,7 +27,6 @@ export default async function ProductPage({
 
   const category = categories.find((item) => item.href === product.category);
   const isSale = typeof product.salePrice === "number";
-  const reviews = getReviews(product.id);
   const relatedProducts = getRelatedProducts(product);
   const relatedStyling = stylingExamples
     .filter((example) => example.gender === product.gender)
@@ -45,18 +43,12 @@ export default async function ProductPage({
       />
 
       <div className="mt-6 grid grid-cols-1 gap-10 lg:grid-cols-2">
-        <ProductGallery images={product.images} alt={`${product.brand} ${product.name}`} />
+        <ProductGallery images={product.images} alt={product.name} />
 
         <div>
-          <p className="text-sm text-[#6b7280]">{product.brand}</p>
-          <h1 className="font-heading mt-1 text-2xl font-bold text-[#333333] sm:text-3xl">
+          <h1 className="font-heading text-2xl font-bold text-[#333333] sm:text-3xl">
             {product.name}
           </h1>
-
-          <div className="mt-3 flex items-center gap-2">
-            <span className="text-sm text-accent2">★ {product.rating.toFixed(1)}</span>
-            <span className="text-xs text-[#9ca3af]">（{product.reviewCount}件のレビュー）</span>
-          </div>
 
           <div className="mt-4 flex items-baseline gap-3">
             {isSale ? (
@@ -101,25 +93,6 @@ export default async function ProductPage({
         </div>
       </div>
 
-      <section className="mt-16 border-t border-[#e5e7eb] pt-12">
-        <SectionHeading title="レビュー・評価" align="left" />
-        <div className="mt-6 flex flex-col gap-6">
-          {reviews.map((review) => (
-            <div key={review.id} className="border-b border-[#f3f4f6] pb-6">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-bold text-[#333333]">{review.author}</p>
-                <p className="text-xs text-[#9ca3af]">{review.date.replaceAll("-", ".")}</p>
-              </div>
-              <p className="mt-1 text-sm text-accent2">
-                {"★".repeat(review.rating)}
-                {"☆".repeat(5 - review.rating)}
-              </p>
-              <p className="mt-2 text-sm leading-relaxed text-[#6b7280]">{review.comment}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {relatedStyling.length > 0 && (
         <section className="mt-16 border-t border-[#e5e7eb] pt-12">
           <SectionHeading title="コーディネート事例" align="left" />
@@ -131,7 +104,7 @@ export default async function ProductPage({
 
       {relatedProducts.length > 0 && (
         <section className="mt-16 border-t border-[#e5e7eb] pt-12">
-          <SectionHeading title={`${product.brand}の他のアイテム`} align="left" />
+          <SectionHeading title="関連アイテム" align="left" />
           <div className="mt-6 flex gap-4 overflow-x-auto pb-2 sm:gap-6">
             {relatedProducts.map((related) => (
               <div key={related.id} className="w-40 shrink-0 sm:w-56">

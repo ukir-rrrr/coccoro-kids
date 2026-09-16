@@ -1,3 +1,5 @@
+import { products } from "@/lib/products";
+
 export type Category = {
   label: string;
   href: string;
@@ -21,6 +23,20 @@ export const categories: Category[] = [
   { label: "雑貨・インテリア", href: "/category/goods" },
   { label: "ギフト（出産祝い・誕生日ギフトセット）", href: "/category/gift" },
 ];
+
+const categoryHrefsWithProducts = () => {
+  const hrefs = new Set<string>();
+  for (const product of products) {
+    hrefs.add(product.category);
+  }
+  return hrefs;
+};
+
+/** 1件以上商品があるカテゴリのみ（categories の定義順を維持） */
+export function getCategoriesWithProducts(): Category[] {
+  const hrefs = categoryHrefsWithProducts();
+  return categories.filter((category) => hrefs.has(category.href));
+}
 
 export type GenderEntry = {
   label: string;

@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { categories } from "@/lib/categories";
+import { getCategoriesWithProducts } from "@/lib/categories";
 
 export default function CategoryTextLinks() {
+  const categories = getCategoriesWithProducts();
+
   return (
     <div className="flex flex-wrap justify-center text-sm text-[#6b7280]">
       {categories.map((category, i) => (

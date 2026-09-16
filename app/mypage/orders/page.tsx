@@ -50,7 +50,6 @@ export default function MyPageOrdersPage() {
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm text-[#333333]">{item.name}</p>
-                    <p className="text-xs text-[#9ca3af]">{item.brand}</p>
                   </div>
                 </Link>
               ))}

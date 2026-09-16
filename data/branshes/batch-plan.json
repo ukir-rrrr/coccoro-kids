@@ -14,7 +14,7 @@
       "configPath": "data/branshes/configs/tops.json",
       "manifestPath": "data/branshes/manifests/tops.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "outer",
@@ -24,7 +24,7 @@
       "configPath": "data/branshes/configs/outer.json",
       "manifestPath": "data/branshes/manifests/outer.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "bottoms",
@@ -34,7 +34,7 @@
       "configPath": "data/branshes/configs/bottoms.json",
       "manifestPath": "data/branshes/manifests/bottoms.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "onepiece",
@@ -44,7 +44,7 @@
       "configPath": "data/branshes/configs/onepiece.json",
       "manifestPath": "data/branshes/manifests/onepiece.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "baby",
@@ -54,7 +54,7 @@
       "configPath": "data/branshes/configs/baby.json",
       "manifestPath": "data/branshes/manifests/baby.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "shoes",
@@ -64,7 +64,7 @@
       "configPath": "data/branshes/configs/shoes.json",
       "manifestPath": "data/branshes/manifests/shoes.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "legwear",
@@ -74,7 +74,7 @@
       "configPath": "data/branshes/configs/legwear.json",
       "manifestPath": "data/branshes/manifests/legwear.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "bags",
@@ -84,7 +84,7 @@
       "configPath": "data/branshes/configs/bags.json",
       "manifestPath": "data/branshes/manifests/bags.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "hats",
@@ -94,7 +94,7 @@
       "configPath": "data/branshes/configs/hats.json",
       "manifestPath": "data/branshes/manifests/hats.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "underwear",
@@ -104,7 +104,7 @@
       "configPath": "data/branshes/configs/underwear.json",
       "manifestPath": "data/branshes/manifests/underwear.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "pajamas",
@@ -114,7 +114,7 @@
       "configPath": "data/branshes/configs/pajamas.json",
       "manifestPath": "data/branshes/manifests/pajamas.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "formal",
@@ -124,7 +124,7 @@
       "configPath": "data/branshes/configs/formal.json",
       "manifestPath": "data/branshes/manifests/formal.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     },
     {
       "slug": "other-goods",
@@ -134,7 +134,7 @@
       "configPath": "data/branshes/configs/other-goods.json",
       "manifestPath": "data/branshes/manifests/other-goods.json",
       "expectedMinProducts": 13,
-      "status": "pending"
+      "status": "done"
     }
   ]
 }

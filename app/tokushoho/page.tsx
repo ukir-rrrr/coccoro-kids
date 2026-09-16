@@ -14,7 +14,7 @@ const rows: { label: string; value: string }[] = [
   },
   {
     label: "お支払い方法",
-    value: "クレジットカード、銀行振込、Apple Pay、代金引換（KOMOJUによる決済）",
+    value: "クレジットカード、銀行振込、Apple Pay（KOMOJUによる決済）",
   },
   {
     label: "引き渡し時期",

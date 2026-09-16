@@ -9,15 +9,15 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { resolveGender } from "./infer-gender.mjs";
+import { resolveStorePrice } from "./product-pricing.mjs";
+import { buildProductCopy } from "./product-copy.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 const DEFAULT_MANIFEST = join(ROOT, "data", "branshes", "manifest.json");
 const OUTPUT_PATH = join(ROOT, "lib", "products.ts");
 const PUBLIC_DIR = join(ROOT, "public");
-
-const GIRL_KEYWORDS = ["女児", "ガール", "ワンピ", "スカート", "リボン", "フリル", "女の子"];
-const BOY_KEYWORDS = ["男児", "ボーイ", "男の子"];
 
 /** @param {string} manifestPath */
 function loadManifest(manifestPath) {
@@ -26,16 +26,6 @@ function loadManifest(manifestPath) {
     process.exit(1);
   }
   return JSON.parse(readFileSync(manifestPath, "utf8"));
-}
-
-/** @param {string} name @param {string} categoryHref */
-function inferGender(name, categoryHref) {
-  if (categoryHref === "/category/baby") return "baby";
-  const isGirl = GIRL_KEYWORDS.some((kw) => name.includes(kw));
-  const isBoy = BOY_KEYWORDS.some((kw) => name.includes(kw));
-  if (isGirl && !isBoy) return "girl";
-  if (isBoy && !isGirl) return "boy";
-  return "boy";
 }
 
 /** @param {string} sizeLabel */
@@ -60,7 +50,7 @@ function buildSizes(sizeLabel, categoryHref) {
 function toTsProduct(product, index) {
   const name = String(product.name ?? product.id);
   const categoryHref = product.categoryHref ?? `/category/${product.categorySlug ?? "tops"}`;
-  const gender = inferGender(name, categoryHref);
+  const gender = resolveGender(product);
   const color = product.color ? [product.color] : ["マルチ"];
   const images = (product.images ?? []).filter((p) =>
     existsSync(join(PUBLIC_DIR, p.replace(/^\//, ""))),
@@ -69,21 +59,29 @@ function toTsProduct(product, index) {
     console.warn(`warn: no local images for ${product.id}`);
   }
 
+  const { price } = resolveStorePrice(product);
+  const id = String(product.id);
+  const copy = buildProductCopy({
+    id,
+    name,
+    category: categoryHref,
+    gender,
+  });
+
   return {
-    id: String(product.id),
+    id,
     slug: String(product.slug ?? product.id),
     brand: product.brand || "branshes",
     name,
-    price: Number(product.price) || 0,
-    salePrice: product.isSale ? Number(product.price) || undefined : undefined,
+    price,
     images,
     gender,
     category: categoryHref,
     colors: color,
     sizes: buildSizes(product.size, categoryHref),
-    description: `${name}。ブランシェス公式サイトより取得した商品データです。`,
-    material: "詳細は商品ページをご確認ください。",
-    care: "洗濯表示に従ってください。",
+    description: copy.description,
+    material: copy.material,
+    care: copy.care,
     rating: 4.5,
     reviewCount: 0,
     isNew: index < 4,
@@ -138,7 +136,7 @@ function main() {
 
   const source = readFileSync(OUTPUT_PATH, "utf8");
   const startMarker = "export const products: Product[] = [";
-  const endMarker = "\n];\n\nexport function getRanking";
+  const endMarker = "\n];\n\nexport function getNewArrivals";
   const start = source.indexOf(startMarker);
   const end = source.indexOf(endMarker);
   if (start < 0 || end < 0) {
