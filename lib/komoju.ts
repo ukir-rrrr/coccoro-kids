@@ -37,7 +37,6 @@ export function getAppBaseUrl(): string {
     process.env.APP_URL?.trim() ||
     process.env.URL?.trim() ||
     process.env.DEPLOY_PRIME_URL?.trim() ||
-    process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     process.env.VERCEL_URL?.trim();
 
   if (raw) {

@@ -9,3 +9,5 @@
 
 [build.environment]
   NODE_VERSION = "20"
+  # Netlify UI に残った Secret 扱いの NEXT_PUBLIC_* がビルド出力で検知される場合の回避（本来は UI から削除）
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_APP_URL"
