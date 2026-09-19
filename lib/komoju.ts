@@ -31,12 +31,19 @@ export function isKomojuTestMode(): boolean {
   return key.startsWith("sk_test_");
 }
 
-/** 決済 return_url 用の公開ベース URL（末尾スラッシュなし） */
+/** 決済 return_url 用の公開ベース URL（末尾スラッシュなし）。サーバー専用。 */
 export function getAppBaseUrl(): string {
-  const fromEnv = process.env.NEXT_PUBLIC_APP_URL?.trim().replace(/\/$/, "");
-  if (fromEnv) return fromEnv;
-  const vercel = process.env.VERCEL_URL?.trim();
-  if (vercel) return `https://${vercel.replace(/\/$/, "")}`;
+  const raw =
+    process.env.APP_URL?.trim() ||
+    process.env.URL?.trim() ||
+    process.env.DEPLOY_PRIME_URL?.trim() ||
+    process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+    process.env.VERCEL_URL?.trim();
+
+  if (raw) {
+    const normalized = raw.replace(/\/$/, "");
+    return normalized.startsWith("http") ? normalized : `https://${normalized}`;
+  }
   return "http://localhost:3000";
 }
 

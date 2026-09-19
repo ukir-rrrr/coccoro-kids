@@ -18,13 +18,15 @@
 # テスト用 Secret Key（KOMOJU 管理画面からコピー。本番は live キーに差し替え）
 KOMOJU_SECRET_KEY=
 
-# return_url 生成用（ローカル）
-NEXT_PUBLIC_APP_URL=http://localhost:3000
+# return_url 生成用（ローカル。Netlify では自動の URL を使うので不要なことが多い）
+APP_URL=http://localhost:3000
 ```
 
 `npm run dev` を **再起動** してからチェックアウトへ。
 
-Vercel 等にデプロイする場合は、同じ変数をホスティングの Environment Variables に設定し、`NEXT_PUBLIC_APP_URL` を本番 URL（例: `https://your-domain.com`）に合わせてください。
+Netlify では **`URL` が自動設定**されるため、通常は `APP_URL` は不要です。カスタムドメイン等で上書きしたいときだけ `APP_URL` を設定してください（**Secret にしない**）。
+
+Vercel 等では `APP_URL` を本番 URL（例: `https://your-domain.com`）に合わせてください。
 
 ## 3. 動作確認の流れ
 
@@ -48,4 +50,4 @@ Vercel 等にデプロイする場合は、同じ変数をホスティングの 
 ## 5. 本番前の注意
 
 - 注文データは DB に保存していません。本番では Webhook（`payment.captured` 等）と注文永続化が必要です。
-- 本番切替時は `sk_live_...` と本番 URL の `NEXT_PUBLIC_APP_URL` に変更してください。
+- 本番切替時は `sk_live_...` に変更してください。サイト URL は Netlify の `URL` または `APP_URL` で調整します。

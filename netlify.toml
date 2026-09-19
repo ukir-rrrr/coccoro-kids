@@ -1,0 +1,11 @@
+# Next.js on Netlify（@netlify/plugin-nextjs）
+# publish をリポジトリ直下にするとプラグインがエラーになるため .next を指定
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "20"
