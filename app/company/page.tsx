@@ -1,12 +1,32 @@
+import type { ReactNode } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 
-const rows: { label: string; value: string }[] = [
-  { label: "会社名", value: "[ここに会社名を記入]" },
-  { label: "代表者", value: "[ここに代表者名を記入]" },
-  { label: "所在地", value: "[ここに所在地を記入]" },
-  { label: "電話", value: "[ここに電話番号を記入]" },
-  { label: "メール", value: "[ここにメールアドレスを記入]" },
+type CompanyRow = {
+  label: string;
+  value: ReactNode;
+};
+
+const rows: CompanyRow[] = [
+  { label: "会社名", value: "合同会社ミライノ" },
+  { label: "代表者", value: "坂本　千鶴" },
+  { label: "所在地", value: "〒354-0033　埼玉県富士見市羽沢三丁目13番49号" },
+  // { label: "電話", value: "[ここに電話番号を記入]" },
+  {
+    label: "メール",
+    value: (
+      <Link href="mailto:sakamoto@qianheb023com.com" className="text-accent1 underline">
+        sakamoto@qianheb023com.com
+      </Link>
+    ),
+  },
+  { label: "資本金", value: "900万円" },
+  {
+    label: "事業内容",
+    value:
+      "インターネット通販による子供服・ベビー用品・キッズ関連商品の企画販売、および当該ECサイト「MIMORA」の運営",
+  },
   { label: "営業時間", value: "平日 10:00〜17:00（土日祝休）" },
 ];
 
@@ -18,10 +38,10 @@ export default function CompanyPage() {
         運営会社
       </h1>
 
-      <div className="relative mt-6 aspect-3/2 overflow-hidden rounded-lg">
+      <div className="relative mt-6 aspect-3/2 overflow-hidden rounded-lg bg-[#f3f4f6]">
         <Image
-          src="/images/common/about.jpg"
-          alt="スタッフが商品を選んでいる様子"
+          src="/images/common/company-about.jpg"
+          alt="MIMORAの商品選定・店舗運営のイメージ"
           fill
           sizes="(min-width: 1024px) 768px, 100vw"
           className="object-cover"
