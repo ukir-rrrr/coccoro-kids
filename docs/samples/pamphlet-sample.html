@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商品パンフレット（A4横・巻き三つ折り）｜MIMORA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* ============================================================
+       MIMORA パンフレット（A4横 / 巻き三つ折り / 両面1枚）
+
+       ■ 面付け（用紙 297×210mm）
+         1枚目＝外面：[内フラップ 97mm][裏表紙 100mm][表紙 100mm]
+         2枚目＝内面：[内側左 100mm][内側中央 100mm][内フラップ裏 97mm]
+         巻き三つ折りのため、内側に巻き込まれるパネルのみ 97mm（3mm 短い）。
+         仕上がり 100×210mm ＝ 長形3号封筒に入る定形サイズ。
+
+       ■ デザインの軸（サイト app/globals.css・components/ の UI をそのまま紙へ）
+         ・地色は白。区切りは #e5e7eb の実線、面はすべて角丸 2.1mm（＝サイトの 8px）の矩形
+         ・見出しは左寄せ＋直下に 12mm のコーラルのアンダーバー
+         　（components/SectionHeading.tsx の `h-0.5 w-12 bg-accent1` と同じ作法）
+         ・バッジは ProductCard と同じ角丸矩形。NEW=マスタード / RANK=コーラル
+         ・内面は身長 50→160cm の直線スケールが3パネルを横断する
+         　（折り線をまたぐのはスケールの水平線だけ。目盛り・数字・色面は折り線に乗せない）
+       ============================================================ */
+
+    :root {
+      /* サイトのカラートークン（app/globals.css・tailwind.config.ts と同一） */
+      --white: #ffffff;
+      --ink: #333333;
+      --coral: #ff7a8a;       /* accent1 */
+      --coral-dark: #ff5c70;
+      --mustard: #ffc94d;     /* accent2 */
+
+      /* サイトのグレースケール（各ページで使用中の値） */
+      --ink-soft: #6b7280;
+      --ink-faint: #9ca3af;
+      --line: #e5e7eb;
+      --line-soft: #f3f4f6;
+      --gray-bg: #f9fafb;
+
+      /* 印刷用に派生させた淡色（小さな級数でも沈まない濃度） */
+      --coral-tint: #fff5f6;  /* Outline ボタンの hover 背景と同じ */
+      --coral-ink: #d84a5c;   /* 小さな文字用にコーラルを一段濃く */
+      --mustard-tint: #fff7e6;
+      --mustard-ink: #8a6413;
+
+      --r: 2.1mm;             /* 角丸 8px 相当 */
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    body {
+      font-family: "Noto Sans JP", "Hiragino Sans", "Yu Gothic", sans-serif;
+      font-size: 6.9pt;
+      line-height: 1.6;
+      color: var(--ink);
+      background: #9aa0a6;
+      padding: 10mm 0;
+    }
+
+    .rd { font-family: "M PLUS Rounded 1c", "Hiragino Maru Gothic ProN", sans-serif; }
+
+    /* ---------- 用紙 ---------- */
+    .face {
+      position: relative;
+      width: 297mm;
+      height: 210mm;
+      margin: 0 auto 10mm;
+      display: flex;
+      overflow: hidden;
+      background: var(--white);
+      box-shadow: 0 3px 18px rgba(0,0,0,.25);
+      page-break-after: always;
+    }
+    .face:last-of-type { page-break-after: auto; margin-bottom: 0; }
+
+    /* 面を横断する装飾レイヤー（パネルより下に敷く） */
+    .deco {
+      position: absolute;
+      inset: 0;
+      width: 297mm;
+      height: 210mm;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ---------- パネル ---------- */
+    .panel {
+      position: relative;
+      z-index: 1;
+      height: 210mm;
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .w100 { width: 100mm; padding: 10mm 7mm 9mm; }
+    .w97  { width: 97mm;  padding: 10mm 6.5mm 9mm; }
+
+    /* パネルの地色（折り線をまたがない＝面ごとに完結） */
+    .panel--gray { background: var(--gray-bg); }
+
+    /* 折りガイド（画面のみ） */
+    .panel + .panel::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      border-left: .3mm dashed rgba(255,122,138,.55);
+      z-index: 2;
+    }
+
+    /* ============================================================
+       共通パーツ
+       ============================================================ */
+
+    /* セクションラベル（サイトのフッター見出し h3 と同じ扱い） */
+    .label {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 5.6pt;
+      letter-spacing: .18em;
+      color: var(--coral-ink);
+    }
+    .label--ink { color: var(--ink); }
+
+    /* 見出し＋12mm のアンダーバー（SectionHeading と同じ作法） */
+    .h2 {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 12.5pt;
+      line-height: 1.34;
+      letter-spacing: -.01em;
+      margin-top: 1.6mm;
+    }
+    .h2 + .bar { display: block; width: 12mm; height: .5mm; background: var(--coral); margin: 1.8mm 0 2.2mm; }
+    .h3 {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 8.2pt;
+      line-height: 1.38;
+    }
+
+    .lead { font-size: 6.6pt; line-height: 1.75; }
+    .micro { font-size: 5.5pt; line-height: 1.6; color: var(--ink-soft); }
+
+    /* 罫線（サイトの divide-[#e5e7eb] と同じ） */
+    .rule { height: 0; border-top: .25mm solid var(--line); margin: 2.6mm 0; }
+
+    /* 番号（角丸矩形。丸ではない） */
+    .no {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 5mm; height: 5mm;
+      border-radius: 1.3mm;
+      background: var(--coral);
+      color: #fff;
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 6.4pt;
+      flex: 0 0 auto;
+    }
+    .no--mustard { background: var(--mustard); color: var(--mustard-ink); }
+
+    /* バッジ（ProductCard と同じ角丸矩形） */
+    .badge {
+      display: inline-block;
+      border-radius: 1.3mm;
+      padding: .5mm 1.8mm;
+      font-weight: 700;
+      font-size: 5.2pt;
+      letter-spacing: .04em;
+      color: #fff;
+      background: var(--coral);
+    }
+    .badge--new { background: var(--mustard); color: var(--mustard-ink); }
+
+    /* チップ（カテゴリ・キーワードのピル） */
+    .chip {
+      display: inline-block;
+      border: .25mm solid var(--line);
+      border-radius: 99px;
+      padding: .5mm 2mm;
+      font-size: 5.5pt;
+      color: var(--ink);
+      background: var(--white);
+    }
+
+    /* カード（border + radius。サイトのカードと同じ） */
+    .card {
+      border: .25mm solid var(--line);
+      border-radius: var(--r);
+      background: var(--white);
+      padding: 2.4mm 2.8mm;
+    }
+
+    .price {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      color: var(--ink);
+    }
+    .price small { font-size: 5pt; font-weight: 500; color: var(--ink-faint); margin-left: .4mm; }
+
+    /* 写真はすべて角丸矩形（マスクをかけない） */
+    .ph { display: block; width: 100%; object-fit: cover; border-radius: var(--r); background: var(--line-soft); }
+
+    /* 商品グリッド（サイトの grid-cols-3 相当） */
+    .g3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3mm; }
+    .g3 .ph { aspect-ratio: 1 / 1; }
+    .g3 .cat { font-size: 4.9pt; color: var(--ink-faint); margin-top: 1.2mm; letter-spacing: .02em; }
+    .g3 .nm { font-size: 5.5pt; line-height: 1.4; margin-top: .4mm; }
+    .g3 .price { font-size: 6.8pt; margin-top: .8mm; }
+    .g3 > div { display: flex; flex-direction: column; }
+    .g3 > div .price { margin-top: auto; padding-top: .8mm; }
+
+    /* ============================================================
+       外面 1：内フラップ（ご利用ガイド）
+       ============================================================ */
+    .step { display: flex; gap: 2.4mm; margin-top: 3mm; }
+    .step .t { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 7.2pt; }
+    .step p { font-size: 5.9pt; line-height: 1.6; margin-top: .4mm; color: var(--ink-soft); }
+
+    /* 情報テーブル（サイトの dl と同じ 2 カラム＋横罫） */
+    .dl { display: grid; grid-template-columns: 18mm 1fr; font-size: 5.9pt; }
+    .dl > dt, .dl > dd { padding: 1.4mm 0; border-top: .25mm solid var(--line); }
+    .dl > dt { color: var(--ink-faint); font-weight: 700; }
+    .dl > dd { line-height: 1.55; }
+
+    /* 取扱カテゴリ 2 列 */
+    .cats { display: grid; grid-template-columns: 1fr 1fr; gap: .8mm 3mm; margin-top: 2mm; list-style: none; }
+    .cats li { font-size: 5.7pt; padding-left: 2.6mm; position: relative; }
+    .cats li::before {
+      content: "";
+      position: absolute; left: 0; top: 1.5mm;
+      width: 1.4mm; height: 1.4mm; border-radius: .4mm;
+      background: var(--coral);
+    }
+    .cats li:nth-child(even)::before { background: var(--mustard); }
+    .cats .n { color: var(--ink-faint); font-size: 5pt; margin-left: .6mm; }
+
+    /* ============================================================
+       外面 2：裏表紙
+       ============================================================ */
+    .ship {
+      margin-top: 3mm;
+      background: var(--mustard-tint);
+      border: .25mm solid var(--mustard);
+      border-radius: var(--r);
+      padding: 2.4mm 3mm;
+      display: flex;
+      align-items: baseline;
+      gap: 2.4mm;
+    }
+    .ship b { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 8.6pt; color: var(--mustard-ink); }
+    .ship span { font-size: 5.6pt; color: var(--ink-soft); line-height: 1.5; }
+
+    .pay { display: flex; flex-wrap: wrap; gap: 1.4mm; margin-top: 2mm; }
+    .pay span {
+      border: .25mm solid var(--line);
+      border-radius: 1.3mm;
+      padding: .7mm 2mm;
+      font-size: 5.4pt;
+      color: var(--ink-soft);
+      background: var(--white);
+    }
+
+    .qrbox {
+      margin-top: 3mm;
+      border: .3mm solid var(--coral);
+      border-radius: var(--r);
+      background: var(--coral-tint);
+      padding: 3mm;
+      display: flex;
+      gap: 3.4mm;
+      align-items: center;
+    }
+    /* QR：クワイエットゾーンは SVG 側に含めているので枠も白地も置かない */
+    .qr { width: 22mm; height: 22mm; flex: 0 0 auto; display: block; }
+    .qrbox .u {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 7.6pt;
+      color: var(--coral-ink);
+      word-break: break-all;
+      line-height: 1.3;
+    }
+    .qrbox .s { font-size: 5.5pt; color: var(--ink-soft); line-height: 1.55; margin-top: 1.2mm; }
+
+    .corp { margin-top: auto; padding-top: 3mm; border-top: .25mm solid var(--line); }
+
+    /* ============================================================
+       外面 3：表紙
+       ============================================================ */
+    .cover-kicker {
+      font-size: 5.4pt;
+      letter-spacing: .3em;
+      color: var(--ink-faint);
+      font-weight: 700;
+    }
+    .logo { display: block; width: 48mm; height: auto; margin-top: 2.4mm; }
+    .catch {
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 14pt;
+      line-height: 1.45;
+      letter-spacing: -.02em;
+      margin-top: 4mm;
+    }
+    .cover-desc { font-size: 6.2pt; line-height: 1.8; color: var(--ink-soft); margin-top: 2.6mm; }
+    .cover-ph { margin-top: 3.4mm; }
+    .cover-ph .ph { height: 62mm; object-position: 50% 40%; }
+
+    /* 数字（罫線区切り。サイトのテーブル罫と同じ色） */
+    .stats { display: flex; margin-top: auto; border-top: .25mm solid var(--line); border-bottom: .25mm solid var(--line); }
+    .stats div { flex: 1; padding: 2.6mm 0; }
+    .stats div + div { border-left: .25mm solid var(--line); padding-left: 3mm; }
+    .stats .n {
+      display: block;
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 13pt;
+      line-height: 1.1;
+      color: var(--ink);
+    }
+    .stats .n em { font-style: normal; font-size: 7pt; color: var(--coral-ink); margin-left: .4mm; }
+    .stats .l { font-size: 4.9pt; color: var(--ink-faint); letter-spacing: .08em; margin-top: .8mm; }
+
+    .cover-foot { margin-top: auto; }
+    .open {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-radius: var(--r);
+      background: var(--ink);
+      color: #fff;
+      padding: 2.2mm 3mm;
+      font-family: "M PLUS Rounded 1c", sans-serif;
+      font-weight: 800;
+      font-size: 6.6pt;
+      letter-spacing: .02em;
+    }
+    .open span { font-size: 5.4pt; font-weight: 500; letter-spacing: .1em; opacity: .75; }
+
+    /* ============================================================
+       内面：3段グリッド（74 / 60 / 57mm）
+       身長スケールは deco の SVG が 3 パネルを横断して描く
+       ============================================================ */
+    .in { display: grid; grid-template-rows: 70mm 64mm 1fr; height: 100%; }
+    .in > section { display: flex; flex-direction: column; min-height: 0; }
+
+    /* 上段：4つの入口 */
+    .entry { display: flex; gap: 2.2mm; align-items: flex-start; }
+    .entry .tx { flex: 1; }
+    .entry .t { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 7.4pt; line-height: 1.35; }
+    .entry .s { font-size: 5.5pt; line-height: 1.55; color: var(--ink-soft); margin-top: .6mm; }
+
+    /* 性別ボックス 3 列 */
+    .gen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2mm; margin-top: 2.2mm; }
+    .gen div {
+      border: .25mm solid var(--line);
+      border-radius: var(--r);
+      padding: 1.8mm 1mm;
+      text-align: center;
+      background: var(--white);
+    }
+    .gen .g { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 7pt; letter-spacing: .06em; }
+    .gen .c { font-size: 5pt; color: var(--ink-faint); margin-top: .4mm; }
+    .gen div:nth-child(1) .g { color: var(--ink); }
+    .gen div:nth-child(2) .g { color: var(--coral-ink); }
+    .gen div:nth-child(3) .g { color: var(--mustard-ink); }
+
+    /* スタイリング 3 列（3:4 の縦写真） */
+    .sty { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.6mm; margin-top: 2.4mm; }
+    .sty .ph { aspect-ratio: 3 / 4; object-position: 50% 22%; }
+    .sty .g { font-size: 4.9pt; color: var(--ink-faint); letter-spacing: .1em; margin-top: 1.2mm; }
+    .sty .t { font-size: 5.6pt; line-height: 1.4; font-weight: 700; margin-top: .3mm; }
+
+    /* ランキング 3 列 */
+    .rank { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2.6mm; margin-top: 2.4mm; }
+    .rank .ph { aspect-ratio: 1 / 1; }
+    .rank .hd { display: flex; align-items: center; gap: 1.4mm; margin-bottom: 1.4mm; }
+    .rank .g { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 5.8pt; letter-spacing: .08em; color: var(--ink-soft); }
+    .rank .nm { font-size: 5.4pt; line-height: 1.38; margin-top: 1.2mm; }
+    .rank .price { font-size: 6.6pt; margin-top: .6mm; }
+
+    /* 中段：身長スケール（SVG の座標に合わせた高さ配分） */
+    /* 上端 10mm + 上段 70mm = 80mm から中段が始まる。
+       sz-gap は絶対位置 102〜118mm にあたり、deco の SVG がここにスケールを描く。 */
+    .sz-head  { height: 11mm; }
+    .sz-group { height: 11mm; }
+    .sz-gap   { height: 16mm; }
+    .sz-rows  { flex: 1; }
+
+    .sz-name { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 9.4pt; letter-spacing: .04em; }
+    .sz-range { font-size: 5.6pt; color: var(--ink-soft); margin-top: .4mm; }
+    .sz-tbl { width: 100%; border-collapse: collapse; }
+    .sz-tbl td { padding: .85mm 0; font-size: 5.6pt; line-height: 1.45; border-top: .25mm solid var(--line); }
+    .sz-tbl td:first-child { font-family: "M PLUS Rounded 1c", sans-serif; font-weight: 800; font-size: 6.2pt; width: 17mm; }
+    .sz-tbl td:last-child { color: var(--ink-soft); text-align: right; }
+
+    /* 下段：CTA（内フラップ裏） */
+    .cta { margin-top: auto; }
+    .perk { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6mm; margin-top: 2mm; }
+    .perk div {
+      border-radius: 1.3mm;
+      background: var(--gray-bg);
+      padding: 1.6mm 2mm;
+      font-size: 5.3pt;
+      line-height: 1.45;
+    }
+    .perk b { font-family: "M PLUS Rounded 1c", sans-serif; font-size: 6pt; display: block; color: var(--coral-ink); }
+
+    /* ---------- 画面表示のみ ---------- */
+    .note {
+      width: 297mm;
+      margin: 0 auto 8mm;
+      background: #fff;
+      border-radius: 3mm;
+      padding: 5mm 8mm;
+      font-size: 9pt;
+      line-height: 1.9;
+    }
+    .note h1 { font-size: 13pt; margin-bottom: 2mm; }
+    .note b { color: var(--coral-dark); }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      .face {
+        margin: 0;
+        box-shadow: none;
+        /* 用紙と同じ 210mm ちょうどにすると、丸め誤差ではみ出した分が次の用紙へこぼれ、
+           1面が2枚に割れることがある。0.4mm だけ詰めて防ぐ。
+           パネルは 210mm のままで、はみ出す 0.4mm は .face の overflow:hidden が飲む。
+           下余白が 9mm あるので中身は欠けない。 */
+        height: 209.6mm;
+      }
+      .note { display: none; }
+      .panel + .panel::before { display: none; }
+    }
+
+    @page { size: A4 landscape; margin: 0; }
+  </style>
+</head>
+<body>
+
+<div class="note">
+  <h1>MIMORA パンフレット（A4横・巻き三つ折り・両面1枚／仕上がり 100×210mm）</h1>
+  <p><b>1枚目＝外面</b>：左から［内フラップ 97mm］［裏表紙 100mm］［表紙 100mm］／
+     <b>2枚目＝内面</b>：左から［内側左 100mm］［内側中央 100mm］［内フラップ裏 97mm］</p>
+  <p><b>折り方</b>：外面を上にして、左端のパネルを内側へ折り込み、続けて同じ向きにもう一度折ると、右端が表紙になります（巻き三つ折り）。巻き込まれるパネルだけ 97mm と 3mm 短くしてあります。仕上がり 100×210mm は長形3号封筒に入る定形サイズです。</p>
+  <p><b>印刷</b>：A4・<b>横</b>・等倍（100%）・余白なし・両面（長辺とじ）。破線の折りガイドは印刷されません。</p>
+</div>
+
+<!-- ============================================================
+     外面：[内フラップ][裏表紙][表紙]
+     ============================================================ -->
+<section class="face">
+
+  <!-- 内フラップ：ご利用ガイド -->
+  <div class="panel w97 panel--gray">
+    <p class="label">SHOPPING GUIDE</p>
+    <h2 class="h2">ご注文は、<br />3ステップ。</h2><span class="bar"></span>
+
+    <div class="step">
+      <span class="no">1</span>
+      <div>
+        <p class="t">探す</p>
+        <p>カテゴリ・性別・サイズ・ランキング・スタイリング事例から。キーワード検索にも対応しています。</p>
+      </div>
+    </div>
+    <div class="step">
+      <span class="no">2</span>
+      <div>
+        <p class="t">カラーとサイズを選んでカートへ</p>
+        <p>在庫のあるサイズ・カラーだけが選べます。会員登録なしでもご購入いただけます。</p>
+      </div>
+    </div>
+    <div class="step">
+      <span class="no">3</span>
+      <div>
+        <p class="t">お支払い方法を選んで注文完了</p>
+        <p>クレジットカード／銀行振込／Apple Pay に対応しています（KOMOJU による決済）。</p>
+      </div>
+    </div>
+
+    <div class="rule"></div>
+
+    <dl class="dl">
+      <dt>送料</dt><dd>全国一律 ¥550（税込）</dd>
+      <dt>送料無料</dt><dd>¥8,800（税込）以上のお買い上げで無料</dd>
+      <dt>発送</dt><dd>ご注文確定後、通常3〜5営業日以内</dd>
+      <dt>返品・交換</dt><dd>商品到着後8日以内、未使用・タグ付きに限り承ります。お客様都合の返送料はお客様負担、商品不良の場合は当店負担です。</dd>
+      <dt>お問い合わせ</dt><dd>サイトのお問い合わせフォーム、または<br />sakamoto@qianheb023com.com<br />平日 10:00〜17:00（土日祝休）</dd>
+    </dl>
+
+    <p class="label label--ink" style="margin-top:3.4mm">取扱カテゴリ</p>
+    <ul class="cats">
+      <li>トップス<span class="n">13</span></li>
+      <li>ボトムス<span class="n">13</span></li>
+      <li>アウター・羽織り<span class="n">13</span></li>
+      <li>ワンピース<span class="n">13</span></li>
+      <li>シューズ<span class="n">13</span></li>
+      <li>バッグ・リュック<span class="n">13</span></li>
+      <li>インナー・パジャマ<span class="n">26</span></li>
+      <li>帽子・小物<span class="n">26</span></li>
+      <li>ベビー服（60〜80cm）<span class="n">13</span></li>
+      <li>雑貨・セレモニー<span class="n">26</span></li>
+    </ul>
+
+    <div style="margin-top:auto">
+      <p class="label">GIFT</p>
+      <p class="h3" style="margin-top:1mm">出産祝い・お誕生日に。</p>
+      <div class="g3" style="margin-top:2.2mm">
+        <div>
+          <img class="ph" src="../../public/images/products/4580802433511/01.jpg" alt="ぬいぐるみリュック" />
+          <p class="cat">ベビー</p>
+          <p class="nm">ぬいぐるみリュック</p>
+          <p class="price">¥2,310<small>税込</small></p>
+        </div>
+        <div>
+          <img class="ph" src="../../public/images/products/4580802484728/01.jpg" alt="コンパクトヤミービブ" />
+          <p class="cat">ベビー</p>
+          <p class="nm">コンパクトヤミービブ</p>
+          <p class="price">¥3,080<small>税込</small></p>
+        </div>
+        <div>
+          <img class="ph" src="../../public/images/products/2004000039228/01.jpg" alt="ボウリングセット" />
+          <p class="cat">雑貨</p>
+          <p class="nm">ボウリングセット</p>
+          <p class="price">¥1,760<small>税込</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 裏表紙 -->
+  <div class="panel w100">
+    <p class="label">ABOUT MIMORA</p>
+    <h2 class="h2">厳選したキッズ・ベビーを、<br />ひとつのお店に。</h2><span class="bar"></span>
+
+    <img class="ph" src="../../public/images/common/company-about.jpg" alt="MIMORAの商品選定のイメージ" style="height:42mm;object-position:50% 45%" />
+
+    <p class="lead" style="margin-top:2.8mm">
+      「安いから」でも「そのブランドだから」でもなく、いま着せたい一枚で選べること。
+      MIMORAは、子供服・ベビー用品を横断してセレクトし、コーディネート事例とランキングまでを
+      ひとつの店内でつなぐキッズ用品セレクトストアです。
+    </p>
+
+    <div class="ship">
+      <b>¥8,800以上 送料無料</b>
+      <span>全国一律 ¥550（税込）<br />3〜5営業日以内に発送</span>
+    </div>
+
+    <p class="label label--ink" style="margin-top:3.4mm">お支払い方法</p>
+    <div class="pay">
+      <span>クレジットカード</span>
+      <span>銀行振込</span>
+      <span>Apple Pay</span>
+      <span>KOMOJU 決済</span>
+    </div>
+
+    <div class="qrbox">
+      <img class="qr" src="qr-mimora.svg" alt="MIMORA オンラインストアのQRコード" />
+      <div>
+        <p class="u">qianheb023com.com</p>
+        <p class="s">169アイテムすべてと、最新の<br />ランキング・特集はオンラインで。<br />24時間ご注文いただけます。</p>
+      </div>
+    </div>
+
+    <div class="corp">
+      <p class="label label--ink">運営会社</p>
+      <dl class="dl" style="grid-template-columns:16mm 1fr;margin-top:1mm">
+        <dt>会社名</dt><dd>合同会社ミライノ</dd>
+        <dt>代表者</dt><dd>坂本　千鶴</dd>
+        <dt>所在地</dt><dd>〒354-0033<br />埼玉県富士見市羽沢三丁目13番49号</dd>
+        <dt>メール</dt><dd>sakamoto@qianheb023com.com</dd>
+      </dl>
+    </div>
+  </div>
+
+  <!-- 表紙 -->
+  <div class="panel w100">
+    <p class="cover-kicker">KIDS &amp; BABY SELECT STORE</p>
+    <img class="logo" src="../../public/images/logo-transparent.png" alt="MIMORA" />
+
+    <p class="catch">小さな「好き」に、<br />めいっぱい似合うを。</p>
+
+    <p class="cover-desc">
+      ベビーの60cmから、キッズの120cmまで。<br />
+      今日の一枚が迷わず見つかる、<br />
+      キッズ用品セレクトストア。
+    </p>
+
+    <div class="cover-ph">
+      <img class="ph" src="../../public/images/common/hero_01.jpg" alt="親子でお出かけするイメージ" />
+    </div>
+
+    <p class="label label--ink" style="margin-top:4mm">注目キーワード</p>
+    <p style="margin-top:1.6mm;display:flex;flex-wrap:wrap;gap:1.2mm">
+      <span class="chip">チュール</span><span class="chip">ワンピース</span><span class="chip">Tシャツ</span><span class="chip">チェック</span><span class="chip">デニム</span><span class="chip">ルームウェア</span><span class="chip">リュック</span><span class="chip">サンダル</span>
+    </p>
+
+    <div class="stats">
+      <div>
+        <span class="n">169<em>点</em></span>
+        <span class="l">ITEMS</span>
+      </div>
+      <div>
+        <span class="n">10<em>種</em></span>
+        <span class="l">CATEGORIES</span>
+      </div>
+      <div>
+        <span class="n">60<em>-120</em></span>
+        <span class="l">SIZE IN STOCK (cm)</span>
+      </div>
+    </div>
+
+    <div class="cover-foot">
+      <div class="open">
+        <span>OPEN →</span>
+        左から順にひらいてください
+      </div>
+      <p class="micro" style="margin-top:2.4mm;text-align:center">
+        https://qianheb023com.com/　｜　合同会社ミライノ
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<!-- ============================================================
+     内面：[内側左][内側中央][内フラップ裏]
+     身長スケール（50→160cm）が3パネルを横断する。
+     折り線（x=100mm / x=200mm）をまたぐのは水平線だけで、
+     目盛り・数字はいずれも折り線から10mm以上離してある。
+     ============================================================ -->
+<section class="face">
+
+  <svg class="deco" viewBox="0 0 297 210" aria-hidden="true">
+    <!-- スケール本体：マスタードの帯にコーラルの細線を重ねる -->
+    <line x1="12" y1="108.5" x2="285" y2="108.5" stroke="#ffc94d" stroke-width="1.3" stroke-linecap="butt" />
+    <line x1="12" y1="108.5" x2="285" y2="108.5" stroke="#ff7a8a" stroke-width=".3" />
+    <!-- 端点 -->
+    <rect x="11.2" y="105.9" width="1.6" height="5.2" rx=".4" fill="#ff7a8a" />
+    <rect x="284.2" y="105.9" width="1.6" height="5.2" rx=".4" fill="#ff7a8a" />
+    <!-- 目盛り（50〜160cm を 2.4818mm/cm で等間隔配置） -->
+    <g stroke="#ff7a8a" stroke-width=".3">
+      <line x1="12.0"  y1="109.1" x2="12.0"  y2="112.7" />
+      <line x1="36.8"  y1="109.1" x2="36.8"  y2="112.7" />
+      <line x1="61.6"  y1="109.1" x2="61.6"  y2="112.7" />
+      <line x1="86.5"  y1="109.1" x2="86.5"  y2="112.7" />
+      <line x1="111.3" y1="109.1" x2="111.3" y2="112.7" />
+      <line x1="136.1" y1="109.1" x2="136.1" y2="112.7" />
+      <line x1="160.9" y1="109.1" x2="160.9" y2="112.7" />
+      <line x1="185.7" y1="109.1" x2="185.7" y2="112.7" />
+      <line x1="210.5" y1="109.1" x2="210.5" y2="112.7" />
+      <line x1="235.4" y1="109.1" x2="235.4" y2="112.7" />
+      <line x1="260.2" y1="109.1" x2="260.2" y2="112.7" />
+      <line x1="285.0" y1="109.1" x2="285.0" y2="112.7" />
+    </g>
+    <!-- 目盛りの数字 -->
+    <g font-family="M PLUS Rounded 1c, sans-serif" font-weight="800" font-size="2.5" fill="#6b7280" text-anchor="middle">
+      <text x="12.0"  y="116.6">50</text>
+      <text x="36.8"  y="116.6">60</text>
+      <text x="61.6"  y="116.6">70</text>
+      <text x="86.5"  y="116.6">80</text>
+      <text x="111.3" y="116.6">90</text>
+      <text x="136.1" y="116.6">100</text>
+      <text x="160.9" y="116.6">110</text>
+      <text x="185.7" y="116.6">120</text>
+      <text x="210.5" y="116.6">130</text>
+      <text x="235.4" y="116.6">140</text>
+      <text x="260.2" y="116.6">150</text>
+      <text x="285.0" y="116.6">160</text>
+    </g>
+    <!-- スケールの単位（右端／折り線から離れた位置） -->
+    <text x="285.0" y="105.2" font-family="Noto Sans JP, sans-serif" font-size="2.1" fill="#9ca3af" text-anchor="end">身長（cm）</text>
+  </svg>
+
+  <!-- 内側左：4つの入口（01・02）／BABY／PICK UP -->
+  <div class="panel w100">
+    <div class="in">
+
+      <section>
+        <p class="label">HOW TO FIND</p>
+        <h2 class="h2">見つけ方は、4つ。</h2><span class="bar"></span>
+        <p class="lead" style="margin-bottom:2.6mm">
+          169アイテムを、探し方のほうから整理しました。<br />決まっている日も、まだの日も、迷わずたどり着けます。
+        </p>
+
+        <div class="entry">
+          <span class="no">01</span>
+          <div class="tx">
+            <p class="t">カテゴリから探す</p>
+            <p class="s">トップスからシューズ・バッグ・小物まで10カテゴリ。</p>
+            <p style="margin-top:1.6mm;display:flex;flex-wrap:wrap;gap:1.2mm">
+              <span class="chip">トップス</span><span class="chip">ボトムス</span><span class="chip">アウター</span><span class="chip">ワンピース</span><span class="chip">シューズ</span><span class="chip">バッグ</span><span class="chip">インナー</span><span class="chip">帽子・小物</span><span class="chip">ベビー</span><span class="chip">雑貨</span>
+            </p>
+          </div>
+        </div>
+
+        <div class="entry" style="margin-top:3.4mm">
+          <span class="no">02</span>
+          <div class="tx">
+            <p class="t">性別・サイズから探す</p>
+            <p class="s">BOY / GIRL / BABY と身長サイズの組み合わせで。</p>
+          </div>
+        </div>
+        <div class="gen">
+          <div><p class="g">BOY</p><p class="c">88アイテム</p></div>
+          <div><p class="g">GIRL</p><p class="c">59アイテム</p></div>
+          <div><p class="g">BABY</p><p class="c">22アイテム</p></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sz-head">
+          <p class="label">SIZE GUIDE</p>
+          <p class="h3" style="margin-top:.8mm">身長で選べる、サイズ早見表。</p>
+        </div>
+        <div class="sz-group">
+          <p class="sz-name" style="color:var(--mustard-ink)">BABY</p>
+          <p class="sz-range">新生児〜18か月ごろ／50〜80cm</p>
+        </div>
+        <div class="sz-gap"></div>
+        <div class="sz-rows">
+          <table class="sz-tbl">
+            <tr><td>50〜60cm</td><td>新生児〜3か月ごろ</td></tr>
+            <tr><td>70cm</td><td>3〜12か月ごろ</td></tr>
+            <tr><td>80cm</td><td>12〜18か月ごろ</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <p class="label">PICK UP</p>
+        <p class="h3" style="margin-top:.8mm">この秋のウェア</p>
+        <div class="g3" style="margin-top:2.4mm">
+          <div>
+            <img class="ph" src="../../public/images/products/4580802554636/01.jpg" alt="チェック柄ジャケット" />
+            <p class="cat">アウター</p>
+            <p class="nm">チェック柄ジャケット</p>
+            <p class="price">¥3,949<small>税込</small></p>
+          </div>
+          <div>
+            <img class="ph" src="../../public/images/products/4580802464645/01.jpg" alt="ハート刺しゅうデニムワンピース" />
+            <p class="cat">ワンピース</p>
+            <p class="nm">ハート刺しゅう<br />デニムワンピース</p>
+            <p class="price">¥2,618<small>税込</small></p>
+          </div>
+          <div>
+            <img class="ph" src="../../public/images/products/4580802449222/01.jpg" alt="モチーフ付きサロペット" />
+            <p class="cat">ベビー　<span class="badge badge--new">NEW</span></p>
+            <p class="nm">モチーフ付き<br />サロペット</p>
+            <p class="price">¥2,310<small>税込</small></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 内側中央：03 スタイリング／KIDS／PICK UP -->
+  <div class="panel w100">
+    <div class="in">
+
+      <section>
+        <div class="entry">
+          <span class="no">03</span>
+          <div class="tx">
+            <p class="t">スタイリングから探す</p>
+            <p class="s">コーディネート事例から、着用アイテムのページへそのまま移動できます。<br />「今日、何を着せるか」から選びたい日に。</p>
+          </div>
+        </div>
+        <div class="sty">
+          <div>
+            <img class="ph" src="../../public/images/products/4580802474125/04.jpg" alt="週末のお出かけコーデ" />
+            <p class="g">GIRL</p>
+            <p class="t">週末のお出かけコーデ</p>
+          </div>
+          <div>
+            <img class="ph" src="../../public/images/products/4580802526107/03.jpg" alt="公園で元気に遊ぶコーデ" />
+            <p class="g">BOY</p>
+            <p class="t">公園で元気に遊ぶコーデ</p>
+          </div>
+          <div>
+            <img class="ph" src="../../public/images/products/4580802456206/05.jpg" alt="はじめてのお出かけベビーコーデ" />
+            <p class="g">BABY</p>
+            <p class="t">はじめてのお出かけコーデ</p>
+          </div>
+        </div>
+        <p class="micro" style="margin-top:2.2mm">
+          スタイリング事例は1コーデ＝1ページ。着ているアイテムすべてにリンクが付いています。
+        </p>
+      </section>
+
+      <section>
+        <div class="sz-head"></div>
+        <div class="sz-group">
+          <p class="sz-name" style="color:var(--coral-ink)">KIDS</p>
+          <p class="sz-range">1〜10歳ごろ／90〜130cm</p>
+        </div>
+        <div class="sz-gap"></div>
+        <div class="sz-rows">
+          <table class="sz-tbl">
+            <tr><td>90cm</td><td>1〜2歳ごろ</td></tr>
+            <tr><td>100cm</td><td>3〜4歳ごろ</td></tr>
+            <tr><td>110cm</td><td>5〜6歳ごろ</td></tr>
+            <tr><td>120cm</td><td>7〜8歳ごろ</td></tr>
+            <tr><td>130cm</td><td>9〜10歳ごろ</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section>
+        <p class="label">PICK UP</p>
+        <p class="h3" style="margin-top:.8mm">シューズ・バッグ・小物</p>
+        <div class="g3" style="margin-top:2.4mm">
+          <div>
+            <img class="ph" src="../../public/images/products/4580802493928/01.jpg" alt="水抜きソールサンダル" />
+            <p class="cat">シューズ</p>
+            <p class="nm">水抜きソールサンダル</p>
+            <p class="price">¥1,210<small>税込</small></p>
+          </div>
+          <div>
+            <img class="ph" src="../../public/images/products/2015000027795/01.jpg" alt="キッズデイパック リュック" />
+            <p class="cat">バッグ</p>
+            <p class="nm">キッズデイパック<br />リュック</p>
+            <p class="price">¥4,950<small>税込</small></p>
+          </div>
+          <div>
+            <img class="ph" src="../../public/images/products/2004000039419/01.jpg" alt="うさぎ耳ベビーニット帽" />
+            <p class="cat">帽子・小物</p>
+            <p class="nm">うさぎ耳<br />ベビーニット帽</p>
+            <p class="price">¥1,320<small>税込</small></p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- 内フラップ裏：04 ランキング／JUNIOR／CTA -->
+  <div class="panel w97 panel--gray">
+    <div class="in">
+
+      <section>
+        <div class="entry">
+          <span class="no">04</span>
+          <div class="tx">
+            <p class="t">ランキングから探す</p>
+            <p class="s">BOY / GIRL / BABY それぞれの売れ筋を毎週更新。<br />迷ったときの「失敗しない一枚」から。</p>
+          </div>
+        </div>
+        <div class="rank">
+          <div>
+            <div class="hd"><span class="badge">1位</span><span class="g">BOY</span></div>
+            <img class="ph" src="../../public/images/products/2011000496937/01.jpg" alt="ガーデナーテーパードデニムパンツ" />
+            <p class="nm">ガーデナーテーパード<br />デニムパンツ</p>
+            <p class="price">¥990<small>税込</small></p>
+          </div>
+          <div>
+            <div class="hd"><span class="badge">1位</span><span class="g">GIRL</span></div>
+            <img class="ph" src="../../public/images/products/4580802566561/01.jpg" alt="チュール切替長袖Tシャツ" />
+            <p class="nm">チュール切替<br />長袖Tシャツ</p>
+            <p class="price">¥2,640<small>税込</small></p>
+          </div>
+          <div>
+            <div class="hd"><span class="badge">1位</span><span class="g">BABY</span></div>
+            <img class="ph" src="../../public/images/products/4580802449260/01.jpg" alt="モチーフ付きジャンパースカート" />
+            <p class="nm">モチーフ付き<br />ジャンパースカート</p>
+            <p class="price">¥2,310<small>税込</small></p>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="sz-head"></div>
+        <div class="sz-group">
+          <p class="sz-name" style="color:var(--ink-soft)">JUNIOR</p>
+          <p class="sz-range">11歳ごろ〜／140〜160cm</p>
+        </div>
+        <div class="sz-gap"></div>
+        <div class="sz-rows">
+          <table class="sz-tbl">
+            <tr><td>140cm</td><td>11〜12歳ごろ</td></tr>
+            <tr><td>150〜160cm</td><td>13歳以上（Jr）</td></tr>
+          </table>
+          <p class="micro" style="margin-top:2mm">
+            迷ったときは大きめを。サイズはブランドごとに差があるため、商品ページの実寸もご確認ください。<br />
+            <b>現在の取扱いは60〜120cm</b>（シューズ14〜17cm／帽子・小物はフリーサイズ）。順次拡大します。
+          </p>
+        </div>
+      </section>
+
+      <section class="cta">
+        <p class="label">ONLINE STORE</p>
+        <p class="h3" style="margin-top:.8mm">続きは、オンラインで。</p>
+        <div class="qrbox" style="margin-top:2.2mm">
+          <img class="qr" src="qr-mimora.svg" alt="MIMORA オンラインストアのQRコード" />
+          <div>
+            <p class="u">qianheb023com.com</p>
+            <p class="s">169アイテムすべてと、<br />最新のランキング・特集を掲載。</p>
+          </div>
+        </div>
+        <div class="perk">
+          <div><b>ポイント還元</b>ご購入ごとにポイントが貯まります</div>
+          <div><b>誕生日クーポン</b>お子さまの記念月に特別価格を</div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+</section>
+
+</body>
+</html>
