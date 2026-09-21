@@ -20,6 +20,11 @@ function pickIntro(seed) {
 }
 
 /** @param {string} name */
+function isBib(name) {
+  return /スタイ|ビブ|ガーゼハンカチスタイ/i.test(name);
+}
+
+/** @param {string} name */
 function nameHints(name) {
   const n = name;
   return {
@@ -33,14 +38,15 @@ function nameHints(name) {
     outer: /ジャケット|コート|ベスト|アウター|ブルゾン/i.test(n),
     onepiece: /ワンピ|ジャンパースカート|サロペット|ドレス/i.test(n),
     pants: /パンツ|ハーフパンツ|ロングパンツ|テーパード/i.test(n),
-    baby: /ベビー|ボディースーツ|ブルマ|スタイ|ビブ/i.test(n),
+    bib: isBib(n),
+    baby: /ベビー|ボディースーツ|ブルマ/i.test(n) && !isBib(n),
     bag: /リュック|バッグ|巾着|トート|ナップサック|プールバッグ|ショルダー/i.test(n),
     hat: /帽|キャップ|ハット|ニット帽/i.test(n),
     shoes: /シューズ|スニーカ|サンダル|ブーツ/i.test(n),
     set: /セット|＋|\+/i.test(n),
     inner: /インナー|タイツ|レギンス|下着|ブリーフ|トランクス/i.test(n),
     towel: /タオル|ハンカチ/i.test(n),
-    toy: /ぬいぐるみ|おもちゃ|ボウリング/i.test(n),
+    toy: /ぬいぐるみ|おもちゃ|ボウリング|にぎにぎ|ラトル|ぐるぐるスティック/i.test(n),
   };
 }
 
@@ -49,6 +55,46 @@ export function buildProductDescription(input) {
   const { name, category, id = name } = input;
   const h = nameHints(name);
   const intro = pickIntro(id);
+
+  if (h.bib && !h.set) {
+    let detail =
+      "肌当たりのやわらかい素材で、食べこぼしやミルクなどからお洋服の汚れを防ぎます。留め具で着脱しやすく、ベビーの毎日使いに適したスタイです。";
+    if (/三角スタイ/.test(name)) {
+      detail =
+        "三角形の形で首元にフィットしやすく、食べこぼしなどから服の汚れを防ぎます。留め具で着脱しやすく、肌当たりのやわらかさを考えたベビー用スタイです。";
+    } else if (/ガーゼハンカチ/.test(name)) {
+      detail =
+        "ガーゼ素材で吸い取りやすく、スタイとしてもハンカチとしても使える二役アイテムです。首元まわりの汚れから服を守り、着脱もしやすい仕様です。";
+    }
+    let accent = "";
+    if (h.embroidery) accent = "モチーフや柄のディテールが、表情豊かな一枚に仕上がっています。";
+    else if (h.knit) accent = "やわらかな風合いの素材感が、首元をやさしく包みます。";
+    return accent ? `${name}。${detail}${accent}` : `${name}。${detail}`;
+  }
+
+  if (h.set && h.bib) {
+    const detail =
+      "ギフトボックス付きのセットです。同梱のスタイは食べこぼしなどから服を守り、留め具で着脱しやすい仕様。出産祝いやプレゼントにも選びやすい内容です。";
+    return `${name}。${detail}`;
+  }
+
+  if (h.toy && !h.set) {
+    let detail =
+      "ベビーの手先にやさしいサイズ感で、握ったり触ったりして遊べるベビー向け小物です。肌当たりのやわらかさを考えた素材で、おうち遊びやお出かけのお供にも使いやすいアイテムです。";
+    if (/バスケット/.test(name)) {
+      detail =
+        "複数のにぎにぎがセットになったバスケット仕様。取り出して遊べるので、ベビーの好奇心をやさしく刺激します。ギフトにも選びやすい内容です。";
+    }
+    let accent = "";
+    if (h.embroidery) accent = "モチーフのディテールが、やさしい表情を添えています。";
+    return accent ? `${name}。${detail}${accent}` : `${name}。${detail}`;
+  }
+
+  if (h.set && h.toy) {
+    const detail =
+      "ギフトボックス付きのセットです。にぎにぎやラトルなど、ベビーの手遊び向けアイテムをまとめた内容。出産祝いやプレゼントにも選びやすい組み合わせです。";
+    return `${name}。${detail}`;
+  }
 
   let detail = "";
   if (h.bag) {
@@ -109,6 +155,14 @@ export function buildProductMaterial(input) {
   if (h.shoes || category === "/category/shoes") {
     return "アッパー：合成皮革・メッシュ／ソール：ラバー／インソール：ポリエステル";
   }
+  if (h.bib) {
+    if (/ガーゼ/.test(name)) return "本体：綿 100％（ガーゼ・パイル系）／留め具：樹脂スナップ";
+    return "本体：綿 100％（天竺・スムース・ガーゼ系）／留め具：樹脂スナップ（仕様により面ファスナーの場合あり）";
+  }
+  if (h.toy) {
+    if (/リネン|コットン/i.test(name)) return "本体：綿 100％（リネン・コットン系）／詰め物：ポリエステル綿（入りの場合あり）";
+    return "本体：綿・ポリエステル混綿（にぎにぎ・ラトル系）／詰め物：ポリエステル綿（入りの場合あり）";
+  }
   if (h.hat || /accessories/.test(category)) {
     if (h.knit) return "本体：アクリル 60％・ウール 20％・ナイロン 20％（混綿想定）";
     return "本体：綿 100％（ツイル・キャンバス系）／芯地：ポリエステル";
@@ -164,6 +218,12 @@ export function buildProductCare(input) {
   }
   if (h.hat && h.knit) {
     return "ネットに入れて手洗い可能コース、またはウール用洗剤で押し洗い。形を整えて平干しし、アイロンは低温・当て布使用で。";
+  }
+  if (h.bib) {
+    return "ベビー用洗剤で30℃以下の弱水流。汚れは付いた早めに洗い、留め具は閉じてネット洗い。漂白剤は避け、日陰で乾燥させてください。";
+  }
+  if (h.toy) {
+    return "表面の汚れは中性洗剤を含ませた布で軽く拭き取り、十分に風通しを確保して乾燥。洗濯機・浸け置きは避けてください。";
   }
   if (h.hat || (category === "/category/accessories" && !h.inner)) {
     return "手洗い可（中性洗剤・30℃以下）。形を整えて日陰で干し、つばや装飾部分は押さえずに乾燥させてください。";
