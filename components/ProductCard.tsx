@@ -13,7 +13,7 @@ const focusRing =
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
   const { isFavorite, toggleFavorite } = useFavorites();
-  const { id, slug, brand, name, price, salePrice, images, colors, sizes, isNew } = product;
+  const { id, slug, brand, name, price, salePrice, images, colors, sizes } = product;
   const isSale = typeof salePrice === "number";
   const favorited = isFavorite(id);
 
@@ -50,11 +50,6 @@ export default function ProductCard({ product }: { product: Product }) {
             {isSale && (
               <span className="rounded-lg bg-accent1 px-2 py-1 text-xs font-bold text-white">
                 SALE
-              </span>
-            )}
-            {isNew && (
-              <span className="rounded-lg bg-accent2 px-2 py-1 text-xs font-bold text-white">
-                NEW
               </span>
             )}
           </div>

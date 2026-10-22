@@ -63,7 +63,6 @@ function toTsProduct(product, index) {
     care: copy.care,
     rating: 4.5,
     reviewCount: 0,
-    isNew: true,
     rank: product.rank ?? index + 1,
   };
 }
@@ -92,7 +91,6 @@ function renderProduct(product) {
     `    care: ${tsString(product.care)},`,
     `    rating: ${product.rating},`,
     `    reviewCount: ${product.reviewCount},`,
-    "    isNew: true,",
     `    rank: ${product.rank},`,
     "  },",
   ];
