@@ -8,7 +8,7 @@ function formatDate(date: string) {
 
 export default function NewsSection() {
   return (
-    <div className="mx-auto flex max-w-3xl flex-col divide-y divide-[#e5e7eb] rounded-lg border border-[#e5e7eb] bg-white">
+    <div className="flex w-full flex-col divide-y divide-[#e5e7eb] rounded-lg border border-[#e5e7eb] bg-white">
       {newsItems.map((item) => (
         <Link
           key={item.slug}
@@ -22,7 +22,7 @@ export default function NewsSection() {
           ) : (
             <div className="h-14 w-14 shrink-0 rounded-lg bg-[#f3f4f6]" />
           )}
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1 text-left">
             <p className="text-xs text-[#9ca3af]">{formatDate(item.date)}</p>
             <p className="mt-1 truncate text-sm text-[#333333]">{item.title}</p>
           </div>

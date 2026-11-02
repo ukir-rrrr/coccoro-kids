@@ -21,17 +21,28 @@ const slides: Slide[] = [
     image: "/images/common/hero_01.jpg",
     alt: "親子でお出かけを楽しむ日常のワンシーン",
     eyebrow: "MIMORA",
-    title: "小さな「好き」に、めいっぱい似合うを。",
+    title: "小さな「好き」に\nめいっぱい似合うを。",
     description: "厳選ブランドの子供服・ベビー用品を、MIMORAで。",
     ctaLabel: "新着アイテムを見る",
     ctaHref: "/new-arrivals",
   },
   {
-    image: "/images/common/hero_02.jpg",
-    alt: "ショップオープン記念セール告知バナー",
-    ctaLabel: "セール詳細を見る",
-    ctaHref: "/features/seasonal-function",
-    graphic: true,
+    image: "/images/common/hero_02_winter202511_v2.jpg",
+    alt: "落ち葉の公園でニットとアウターを着た兄妹が笑っている冬じたくコーデ",
+    eyebrow: "WINTER LAYERING",
+    title: "重ねて、あったか。\n冬じたくコーデ",
+    description: "気温差のある季節に活躍するレイヤード＆アウターをセレクト。",
+    ctaLabel: "特集を見る",
+    ctaHref: "/features/brand-special",
+  },
+  {
+    image: "/images/common/hero_03_babygift202511.jpg",
+    alt: "リネンの上にギフトボックスとベビー服・スタイ・にぎにぎを並べたフラットレイ",
+    eyebrow: "BABY GIFT",
+    title: "はじめての冬に、\nやさしい贈りもの。",
+    description: "出産祝い・クリスマスに選ばれやすいベビーギフトをセレクト。",
+    ctaLabel: "ギフト特集を見る",
+    ctaHref: "/features/baby-gift",
   },
 ];
 
@@ -82,7 +93,7 @@ export default function HeroCarousel() {
                     </p>
                   )}
                   {slide.title && (
-                    <h1 className="font-heading mt-2 max-w-md text-2xl font-bold leading-snug text-white sm:text-4xl">
+                    <h1 className="font-heading mt-2 max-w-md whitespace-pre-line text-2xl font-bold leading-snug text-white sm:text-4xl">
                       {slide.title}
                     </h1>
                   )}
