@@ -22,8 +22,8 @@ export type Feature = {
 export const features: Feature[] = [
   {
     slug: "brand-special",
-    title: "秋先のレイヤード＆アウター特集",
-    description: "気温差のある季節に活躍する長袖と羽織りをセレクト",
+    title: "秋冬のレイヤード＆アウター特集",
+    description: "重ね着と羽織りで、冬じたくのコーディネートをセレクト",
     image: "/images/features/autumn-layer-outer.jpg",
     body: [
       "朝晩はひんやり、昼間はまだ暑い——秋は重ね着が活きる季節です。長袖Tシャツにライトアウターを一枚足すだけで、体温調節もしやすくなります。",
