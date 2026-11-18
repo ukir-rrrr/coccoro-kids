@@ -4,7 +4,7 @@ const rows: { label: string; value: string }[] = [
   { label: "販売業者", value: "合同会社ミライノ" },
   { label: "運営統括責任者", value: "坂本　千鶴" },
   { label: "所在地", value: "〒354-0033　埼玉県富士見市羽沢三丁目13番49号" },
-  // { label: "電話番号", value: "[ここに電話番号を記入]" },
+  { label: "電話番号", value: "050-1720-8872" },
   { label: "メールアドレス", value: "sakamoto@qianheb023com.com" },
   { label: "営業時間", value: "平日 10:00〜17:00（土日祝休）" },
   { label: "販売価格", value: "商品ページ毎に記載の価格（税込）となります。" },

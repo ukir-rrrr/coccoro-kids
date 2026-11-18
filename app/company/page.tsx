@@ -12,7 +12,14 @@ const rows: CompanyRow[] = [
   { label: "会社名", value: "合同会社ミライノ" },
   { label: "代表者", value: "坂本　千鶴" },
   { label: "所在地", value: "〒354-0033　埼玉県富士見市羽沢三丁目13番49号" },
-  // { label: "電話", value: "[ここに電話番号を記入]" },
+  {
+    label: "電話",
+    value: (
+      <Link href="tel:05017208872" className="text-accent1 underline">
+        050-1720-8872
+      </Link>
+    ),
+  },
   {
     label: "メール",
     value: (
